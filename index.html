@@ -20,21 +20,21 @@
     <div class="logo-dot">💜</div>
     <span class="app-name">Finance</span>
   </div>
+  <button class="hamburger-btn" onclick="openHamburger()">☰</button>
 </header>
 
 <!-- MAIN -->
 <main class="main-content">
 
-  <!-- ── POCKET VIEW ── -->
-  <div class="view active" id="view-pockets">
-
+  <!-- ── HOME ── -->
+  <div class="view active" id="view-home">
     <div class="summary-card">
       <div class="summary-top">
         <div class="summary-income-wrap">
           <div class="summary-label">Entrate mensili</div>
           <div class="summary-income" id="summaryIncome">€0</div>
         </div>
-        <button class="summary-edit-btn" onclick="openIncomeModal()">✎</button>
+        <button class="summary-add-btn" onclick="showView('entrate')">+</button>
       </div>
       <div class="summary-row">
         <div class="summary-mini">
@@ -52,44 +52,93 @@
       </div>
       <div class="summary-bar-label" id="summaryBarLabel">0% del reddito allocato</div>
     </div>
+  </div>
 
+  <!-- ── ENTRATE ── -->
+  <div class="view" id="view-entrate">
+    <div class="section-header">
+      <span class="section-title">Le tue entrate</span>
+      <span class="section-count" id="entrateCount"></span>
+    </div>
+    <div class="pockets-list" id="entrateList"></div>
+  </div>
+
+  <!-- ── POCKET ── -->
+  <div class="view" id="view-pockets">
     <div class="section-header">
       <span class="section-title">I tuoi pocket</span>
       <span class="section-count" id="pocketsCount"></span>
     </div>
     <div class="pockets-list" id="pocketsList"></div>
-
   </div>
 
-  <!-- ── SETTINGS VIEW ── -->
+  <!-- ── PARTNER ── -->
+  <div class="view" id="view-partner">
+    <div class="summary-card" style="margin-bottom:0">
+      <div class="summary-label" style="margin-bottom:8px">Percentuale di contribuzione</div>
+      <div class="partner-pct-row">
+        <div class="partner-pct-block">
+          <div class="partner-pct-name" id="partnerNameA">Tu</div>
+          <div class="partner-pct-value" id="partnerPctA">0%</div>
+          <div class="partner-pct-amount" id="partnerAmtA">€0</div>
+        </div>
+        <div class="summary-sep"></div>
+        <div class="partner-pct-block">
+          <div class="partner-pct-name" id="partnerNameB">Partner</div>
+          <div class="partner-pct-value" id="partnerPctB">0%</div>
+          <div class="partner-pct-amount" id="partnerAmtB">€0</div>
+        </div>
+      </div>
+      <div class="summary-bar-bg" style="margin-top:14px">
+        <div class="summary-bar-fill" id="partnerBarFill" style="width:50%"></div>
+      </div>
+    </div>
+
+    <div class="settings-block" style="margin-top:20px">
+      <div class="settings-group-label">I tuoi dati</div>
+      <div class="settings-item">
+        <div class="settings-item-left">
+          <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">👤</div>
+          <input type="text" class="settings-inline-input" id="partnerNameInputA" placeholder="Il tuo nome" oninput="renderPartner()" />
+        </div>
+        <div class="settings-item-right">
+          <span style="color:var(--text-muted);font-size:13px">€</span>
+          <input type="number" class="settings-inline-amount" id="partnerAmtInputA" placeholder="1800" min="0" step="1" inputmode="numeric" oninput="renderPartner()" />
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-group-label">Dati partner</div>
+      <div class="settings-item">
+        <div class="settings-item-left">
+          <div class="settings-item-icon" style="background:rgba(236,72,153,0.15);color:#EC4899">👤</div>
+          <input type="text" class="settings-inline-input" id="partnerNameInputB" placeholder="Nome partner" oninput="renderPartner()" />
+        </div>
+        <div class="settings-item-right">
+          <span style="color:var(--text-muted);font-size:13px">€</span>
+          <input type="number" class="settings-inline-amount" id="partnerAmtInputB" placeholder="0" min="0" step="1" inputmode="numeric" oninput="renderPartner()" />
+        </div>
+      </div>
+    </div>
+
+    <div class="partner-example" id="partnerExample"></div>
+  </div>
+
+  <!-- ── IMPOSTAZIONI ── -->
   <div class="view" id="view-settings">
     <div class="settings-block">
-      <div class="settings-group-label">Reddito</div>
-      <div class="settings-item" onclick="openIncomeModal()">
+      <div class="settings-group-label">Dati</div>
+      <div class="settings-item" onclick="confirmClearAll()">
         <div class="settings-item-left">
-          <div class="settings-item-icon" style="background:rgba(124,58,237,0.18);color:#A78BFA">💼</div>
-          <span class="settings-item-name">Stipendio mensile</span>
-        </div>
-        <div class="settings-item-right">
-          <span class="settings-item-value" id="settingsIncomeVal">€0</span>
-          <span class="settings-chevron">›</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="settings-block">
-      <div class="settings-group-label">Pocket</div>
-      <div class="settings-item" onclick="confirmClearPockets()">
-        <div class="settings-item-left">
-          <div class="settings-item-icon" style="background:rgba(239,68,68,0.15);color:#EF4444">🗑</div>
-          <span class="settings-item-name" style="color:var(--red)">Elimina tutti i pocket</span>
+          <div class="settings-item-icon" style="background:var(--red-soft);color:var(--red)">🗑</div>
+          <span class="settings-item-name" style="color:var(--red)">Elimina tutti i dati</span>
         </div>
         <div class="settings-item-right">
           <span class="settings-chevron">›</span>
         </div>
       </div>
     </div>
-
     <div class="settings-version">Finance · Budget planner</div>
   </div>
 
@@ -97,25 +146,28 @@
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <button class="nav-item active" data-view="pockets" onclick="showView('pockets')">
-    <span class="nav-icon">◈</span>
-    <span class="nav-label">Pocket</span>
+  <button class="nav-item" data-view="entrate" onclick="showView('entrate')">
+    <span class="nav-icon">↑</span>
+    <span class="nav-label">Entrate</span>
   </button>
-  <button class="nav-item" data-view="settings" onclick="showView('settings')">
-    <span class="nav-icon">⚙</span>
-    <span class="nav-label">Impostazioni</span>
+  <button class="nav-item active nav-center" data-view="home" onclick="showView('home')">
+    <span class="nav-icon">◈</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" data-view="pockets" onclick="showView('pockets')">
+    <span class="nav-icon">▣</span>
+    <span class="nav-label">Pocket</span>
   </button>
 </nav>
 
 <!-- FAB -->
-<button class="fab-btn" id="fabAdd" onclick="openPocketModal(null)">+</button>
+<button class="fab-btn" id="fabAdd" style="display:none" onclick="onFabClick()">+</button>
 
 <!-- POCKET MODAL -->
 <div class="modal-overlay" id="pocketModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title" id="pocketModalTitle">Nuovo pocket</div>
-
     <div class="pocket-preview">
       <div class="pocket-preview-icon" id="pocketPreviewIcon">💳</div>
       <div class="pocket-preview-info">
@@ -123,39 +175,76 @@
         <div class="pocket-preview-amount" id="pocketPreviewAmount">€0 / mese</div>
       </div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Emoji</label>
-      <input type="text" class="form-input emoji-input" id="pocketEmoji" placeholder="💳" maxlength="2" oninput="updatePreview()" />
+      <input type="text" class="form-input emoji-input" id="pocketEmoji" placeholder="💳" maxlength="2" oninput="updatePocketPreview()" />
     </div>
     <div class="form-group">
       <label class="form-label">Nome</label>
-      <input type="text" class="form-input" id="pocketName" placeholder="es. Affitto" oninput="updatePreview()" />
+      <input type="text" class="form-input" id="pocketName" placeholder="es. Affitto" oninput="updatePocketPreview()" />
     </div>
     <div class="form-group">
       <label class="form-label">Importo mensile (€)</label>
-      <input type="number" class="form-input" id="pocketAmount" placeholder="400" min="0" step="1" inputmode="numeric" oninput="updatePreview()" />
+      <input type="number" class="form-input" id="pocketAmount" placeholder="400" min="0" step="1" inputmode="numeric" oninput="updatePocketPreview()" />
     </div>
     <div class="form-group">
       <label class="form-label">Colore</label>
-      <div class="color-swatches" id="colorSwatches"></div>
+      <div class="color-swatches" id="pocketColorSwatches"></div>
     </div>
-
     <button class="submit-btn" onclick="savePocket()">Salva pocket</button>
     <button class="delete-btn" id="pocketDeleteBtn" onclick="deletePocketFromModal()" style="display:none">Elimina pocket</button>
   </div>
 </div>
 
-<!-- INCOME MODAL -->
-<div class="modal-overlay" id="incomeModal">
+<!-- ENTRATA MODAL -->
+<div class="modal-overlay" id="entrataModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">Entrate mensili</div>
-    <div class="form-group">
-      <label class="form-label">Stipendio / entrate fisse (€)</label>
-      <input type="number" class="form-input" id="incomeInput" placeholder="1800" min="0" step="1" inputmode="numeric" />
+    <div class="modal-title" id="entrataModalTitle">Nuova entrata</div>
+    <div class="pocket-preview">
+      <div class="pocket-preview-icon" id="entrataPreviewIcon">💼</div>
+      <div class="pocket-preview-info">
+        <div class="pocket-preview-name" id="entrataPreviewName">Entrata</div>
+        <div class="pocket-preview-amount" id="entrataPreviewAmount">€0 / mese</div>
+      </div>
     </div>
-    <button class="submit-btn" onclick="saveIncome()">Salva</button>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <input type="text" class="form-input emoji-input" id="entrataEmoji" placeholder="💼" maxlength="2" oninput="updateEntrataPreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Causale</label>
+      <input type="text" class="form-input" id="entrataName" placeholder="es. Stipendio" oninput="updateEntrataPreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Importo mensile (€)</label>
+      <input type="number" class="form-input" id="entrataAmount" placeholder="1800" min="0" step="1" inputmode="numeric" oninput="updateEntrataPreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Colore</label>
+      <div class="color-swatches" id="entrataColorSwatches"></div>
+    </div>
+    <button class="submit-btn" onclick="saveEntrata()">Salva entrata</button>
+    <button class="delete-btn" id="entrataDeleteBtn" onclick="deleteEntrataFromModal()" style="display:none">Elimina entrata</button>
+  </div>
+</div>
+
+<!-- HAMBURGER MENU -->
+<div class="modal-overlay" id="hamburgerMenu">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="hamburger-items">
+      <button class="hamburger-item" onclick="hamburgerGo('partner')">
+        <div class="hamburger-item-icon" style="background:rgba(236,72,153,0.15);color:#EC4899">👥</div>
+        <span class="hamburger-item-label">Partner</span>
+        <span class="settings-chevron">›</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('settings')">
+        <div class="hamburger-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">⚙</div>
+        <span class="hamburger-item-label">Impostazioni</span>
+        <span class="settings-chevron">›</span>
+      </button>
+    </div>
   </div>
 </div>
 
