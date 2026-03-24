@@ -1,7 +1,7 @@
 <!--
 COMANDI PER PUBBLICARE UNA NUOVA VERSIONE:
   git add .
-  git commit -m "descrizione modifica"
+  git commit -m "New UI and UX"
   git push
 -->
 

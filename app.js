@@ -191,9 +191,37 @@ function loadPartnerInputs() {
   renderPartner();
 }
 
+// ── RENDER HOME POCKETS ──
+function renderHomePockets() {
+  const container = document.getElementById('homePocketsList');
+  if (!container) return;
+
+  if (state.pockets.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="padding:32px 24px">
+        <div class="empty-state-icon">💳</div>
+        <div class="empty-state-text">Nessun pocket</div>
+        <div class="empty-state-sub">Vai su Pocket per crearne uno</div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = state.pockets.map(p => `
+    <div class="pocket-card" onclick="openPocketModal('${p.id}')">
+      <div class="pocket-icon" style="background:${p.color}22;color:${p.color}">${p.emoji}</div>
+      <div class="pocket-card-info">
+        <div class="pocket-card-name">${p.name}</div>
+      </div>
+      <div class="pocket-card-amount">${fmtInt(p.amount)}</div>
+      <div class="pocket-card-arrow">›</div>
+    </div>
+  `).join('');
+}
+
 // ── RENDER ALL ──
 function renderAll() {
   renderSummary();
+  renderHomePockets();
   renderEntrate();
   renderPockets();
 }
