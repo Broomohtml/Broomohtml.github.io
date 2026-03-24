@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Finance" />
+  <meta name="theme-color" content="#0D0D14" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>Finance</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="app-logo">
+    <div class="logo-dot">💜</div>
+    <span class="app-name">Finance</span>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <!-- ── POCKET VIEW ── -->
+  <div class="view active" id="view-pockets">
+
+    <div class="summary-card">
+      <div class="summary-top">
+        <div class="summary-income-wrap">
+          <div class="summary-label">Entrate mensili</div>
+          <div class="summary-income" id="summaryIncome">€0</div>
+        </div>
+        <button class="summary-edit-btn" onclick="openIncomeModal()">✎</button>
+      </div>
+      <div class="summary-row">
+        <div class="summary-mini">
+          <div class="summary-mini-label">Allocato</div>
+          <div class="summary-mini-amount" id="summaryAllocato">€0</div>
+        </div>
+        <div class="summary-sep"></div>
+        <div class="summary-mini">
+          <div class="summary-mini-label">Scarto</div>
+          <div class="summary-mini-amount" id="summaryScarto">€0</div>
+        </div>
+      </div>
+      <div class="summary-bar-bg">
+        <div class="summary-bar-fill" id="summaryBarFill" style="width:0%"></div>
+      </div>
+      <div class="summary-bar-label" id="summaryBarLabel">0% del reddito allocato</div>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title">I tuoi pocket</span>
+      <span class="section-count" id="pocketsCount"></span>
+    </div>
+    <div class="pockets-list" id="pocketsList"></div>
+
+  </div>
+
+  <!-- ── SETTINGS VIEW ── -->
+  <div class="view" id="view-settings">
+    <div class="settings-block">
+      <div class="settings-group-label">Reddito</div>
+      <div class="settings-item" onclick="openIncomeModal()">
+        <div class="settings-item-left">
+          <div class="settings-item-icon" style="background:rgba(124,58,237,0.18);color:#A78BFA">💼</div>
+          <span class="settings-item-name">Stipendio mensile</span>
+        </div>
+        <div class="settings-item-right">
+          <span class="settings-item-value" id="settingsIncomeVal">€0</span>
+          <span class="settings-chevron">›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-group-label">Pocket</div>
+      <div class="settings-item" onclick="confirmClearPockets()">
+        <div class="settings-item-left">
+          <div class="settings-item-icon" style="background:rgba(239,68,68,0.15);color:#EF4444">🗑</div>
+          <span class="settings-item-name" style="color:var(--red)">Elimina tutti i pocket</span>
+        </div>
+        <div class="settings-item-right">
+          <span class="settings-chevron">›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-version">Finance · Budget planner</div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="pockets" onclick="showView('pockets')">
+    <span class="nav-icon">◈</span>
+    <span class="nav-label">Pocket</span>
+  </button>
+  <button class="nav-item" data-view="settings" onclick="showView('settings')">
+    <span class="nav-icon">⚙</span>
+    <span class="nav-label">Impostazioni</span>
+  </button>
+</nav>
+
+<!-- FAB -->
+<button class="fab-btn" id="fabAdd" onclick="openPocketModal(null)">+</button>
+
+<!-- POCKET MODAL -->
+<div class="modal-overlay" id="pocketModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="pocketModalTitle">Nuovo pocket</div>
+
+    <div class="pocket-preview">
+      <div class="pocket-preview-icon" id="pocketPreviewIcon">💳</div>
+      <div class="pocket-preview-info">
+        <div class="pocket-preview-name" id="pocketPreviewName">Pocket</div>
+        <div class="pocket-preview-amount" id="pocketPreviewAmount">€0 / mese</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <input type="text" class="form-input emoji-input" id="pocketEmoji" placeholder="💳" maxlength="2" oninput="updatePreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome</label>
+      <input type="text" class="form-input" id="pocketName" placeholder="es. Affitto" oninput="updatePreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Importo mensile (€)</label>
+      <input type="number" class="form-input" id="pocketAmount" placeholder="400" min="0" step="1" inputmode="numeric" oninput="updatePreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Colore</label>
+      <div class="color-swatches" id="colorSwatches"></div>
+    </div>
+
+    <button class="submit-btn" onclick="savePocket()">Salva pocket</button>
+    <button class="delete-btn" id="pocketDeleteBtn" onclick="deletePocketFromModal()" style="display:none">Elimina pocket</button>
+  </div>
+</div>
+
+<!-- INCOME MODAL -->
+<div class="modal-overlay" id="incomeModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Entrate mensili</div>
+    <div class="form-group">
+      <label class="form-label">Stipendio / entrate fisse (€)</label>
+      <input type="number" class="form-input" id="incomeInput" placeholder="1800" min="0" step="1" inputmode="numeric" />
+    </div>
+    <button class="submit-btn" onclick="saveIncome()">Salva</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>
