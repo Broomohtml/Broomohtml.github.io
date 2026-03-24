@@ -28,14 +28,8 @@
 
   <!-- ── HOME ── -->
   <div class="view active" id="view-home">
-    <div class="summary-card">
-      <div class="summary-top">
-        <div class="summary-income-wrap">
-          <div class="summary-label">Entrate mensili</div>
-          <div class="summary-income" id="summaryIncome">€0</div>
-        </div>
-        <button class="summary-add-btn" onclick="showView('entrate')">+</button>
-      </div>
+    <div class="summary-card" onclick="showView('dashboard')">
+      <div class="summary-card-hint">Dashboard ↗</div>
       <div class="summary-row">
         <div class="summary-mini">
           <div class="summary-mini-label">Allocato</div>
@@ -43,8 +37,8 @@
         </div>
         <div class="summary-sep"></div>
         <div class="summary-mini">
-          <div class="summary-mini-label">Scarto</div>
-          <div class="summary-mini-amount" id="summaryScarto">€0</div>
+          <div class="summary-mini-label">Libero</div>
+          <div class="summary-mini-amount" id="summaryLibero">€0</div>
         </div>
       </div>
       <div class="summary-bar-bg">
@@ -62,6 +56,10 @@
 
   <!-- ── ENTRATE ── -->
   <div class="view" id="view-entrate">
+    <div class="entrate-total-card">
+      <div class="entrate-total-label">Entrate mensili totali</div>
+      <div class="entrate-total-value" id="entrateTotalVal">€0</div>
+    </div>
     <div class="section-header">
       <span class="section-title">Le tue entrate</span>
       <span class="section-count" id="entrateCount"></span>
@@ -78,9 +76,31 @@
     <div class="pockets-list" id="pocketsList"></div>
   </div>
 
+  <!-- ── DASHBOARD ── -->
+  <div class="view" id="view-dashboard">
+    <div class="summary-card" style="cursor:default">
+      <div class="summary-row" style="margin-bottom:12px">
+        <div class="summary-mini">
+          <div class="summary-mini-label">Entrate mensili</div>
+          <div class="summary-mini-amount" id="dashIncome">€0</div>
+        </div>
+        <div class="summary-sep"></div>
+        <div class="summary-mini">
+          <div class="summary-mini-label">Libero</div>
+          <div class="summary-mini-amount" id="dashLibero">€0</div>
+        </div>
+      </div>
+      <div class="summary-stacked-bar" id="dashStackedBar"></div>
+    </div>
+    <div class="section-header" style="padding-top:16px">
+      <span class="section-title">Distribuzione pocket</span>
+    </div>
+    <div class="dash-list" id="dashPocketList"></div>
+  </div>
+
   <!-- ── PARTNER ── -->
   <div class="view" id="view-partner">
-    <div class="summary-card" style="margin-bottom:0">
+    <div class="summary-card" style="margin-bottom:0;cursor:default">
       <div class="summary-label" style="margin-bottom:8px">Percentuale di contribuzione</div>
       <div class="partner-pct-row">
         <div class="partner-pct-block">
@@ -101,25 +121,24 @@
     </div>
 
     <div class="settings-block" style="margin-top:20px">
-      <div class="settings-group-label">I tuoi dati</div>
-      <div class="settings-item">
+      <div class="settings-group-label">Le tue entrate</div>
+      <div class="settings-item" style="cursor:default">
         <div class="settings-item-left">
           <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">👤</div>
-          <input type="text" class="settings-inline-input" id="partnerNameInputA" placeholder="Il tuo nome" oninput="renderPartner()" />
+          <span class="settings-item-name" id="partnerMyName">Tu</span>
         </div>
         <div class="settings-item-right">
-          <span style="color:var(--text-muted);font-size:13px">€</span>
-          <input type="number" class="settings-inline-amount" id="partnerAmtInputA" placeholder="1800" min="0" step="1" inputmode="numeric" oninput="renderPartner()" />
+          <span class="settings-item-value" id="partnerMyIncome">€0</span>
         </div>
       </div>
     </div>
 
     <div class="settings-block">
       <div class="settings-group-label">Dati partner</div>
-      <div class="settings-item">
+      <div class="settings-item" style="cursor:default">
         <div class="settings-item-left">
           <div class="settings-item-icon" style="background:rgba(236,72,153,0.15);color:#EC4899">👤</div>
-          <input type="text" class="settings-inline-input" id="partnerNameInputB" placeholder="Nome partner" oninput="renderPartner()" />
+          <input type="text" class="settings-inline-input" id="partnerNameInputB" placeholder="Nome partner" oninput="renderPartner()" autocomplete="off" />
         </div>
         <div class="settings-item-right">
           <span style="color:var(--text-muted);font-size:13px">€</span>
@@ -129,6 +148,31 @@
     </div>
 
     <div class="partner-example" id="partnerExample"></div>
+  </div>
+
+  <!-- ── PROFILO ── -->
+  <div class="view" id="view-profile">
+    <div class="settings-block">
+      <div class="settings-group-label">Il tuo profilo</div>
+      <div class="settings-item" style="cursor:default">
+        <div class="settings-item-left">
+          <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">👤</div>
+          <input type="text" class="settings-inline-input" id="profileName" placeholder="Il tuo nome" oninput="saveProfile()" autocomplete="name" />
+        </div>
+      </div>
+      <div class="settings-item" style="cursor:default">
+        <div class="settings-item-left">
+          <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">🎂</div>
+          <input type="date" class="settings-inline-input settings-date-input" id="profileBirthdate" oninput="saveProfile()" />
+        </div>
+      </div>
+      <div class="settings-item" style="cursor:default">
+        <div class="settings-item-left">
+          <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">💼</div>
+          <input type="text" class="settings-inline-input" id="profileJob" placeholder="Posizione lavorativa" oninput="saveProfile()" autocomplete="organization-title" />
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ── IMPOSTAZIONI ── -->
@@ -153,11 +197,11 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-item" data-view="entrate" onclick="showView('entrate')">
-    <span class="nav-icon">↑</span>
+    <span class="nav-icon nav-icon-money">€</span>
     <span class="nav-label">Entrate</span>
   </button>
   <button class="nav-item active nav-center" data-view="home" onclick="showView('home')">
-    <span class="nav-icon">◈</span>
+    <span class="nav-icon nav-icon-home">⌂</span>
     <span class="nav-label">Home</span>
   </button>
   <button class="nav-item" data-view="pockets" onclick="showView('pockets')">
@@ -173,7 +217,10 @@
 <div class="modal-overlay" id="pocketModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="pocketModalTitle">Nuovo pocket</div>
+    <div class="modal-header">
+      <div class="modal-title" id="pocketModalTitle">Nuovo pocket</div>
+      <button class="modal-close-x" onclick="closePocketModal()">✕</button>
+    </div>
     <div class="pocket-preview">
       <div class="pocket-preview-icon" id="pocketPreviewIcon">💳</div>
       <div class="pocket-preview-info">
@@ -206,7 +253,10 @@
 <div class="modal-overlay" id="entrataModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="entrataModalTitle">Nuova entrata</div>
+    <div class="modal-header">
+      <div class="modal-title" id="entrataModalTitle">Nuova entrata</div>
+      <button class="modal-close-x" onclick="closeEntrataModal()">✕</button>
+    </div>
     <div class="pocket-preview">
       <div class="pocket-preview-icon" id="entrataPreviewIcon">💼</div>
       <div class="pocket-preview-info">
@@ -239,7 +289,21 @@
 <div class="modal-overlay" id="hamburgerMenu">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">Menu</div>
+      <button class="modal-close-x" onclick="closeHamburger()">✕</button>
+    </div>
     <div class="hamburger-items">
+      <button class="hamburger-item" onclick="hamburgerGo('profile')">
+        <div class="hamburger-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">👤</div>
+        <span class="hamburger-item-label">Profilo</span>
+        <span class="settings-chevron">›</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('dashboard')">
+        <div class="hamburger-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">📊</div>
+        <span class="hamburger-item-label">Dashboard</span>
+        <span class="settings-chevron">›</span>
+      </button>
       <button class="hamburger-item" onclick="hamburgerGo('partner')">
         <div class="hamburger-item-icon" style="background:rgba(236,72,153,0.15);color:#EC4899">👥</div>
         <span class="hamburger-item-label">Partner</span>

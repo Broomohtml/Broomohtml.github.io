@@ -29,14 +29,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html { font-size: 16px; height: 100%; }
+html {
+  font-size: 16px;
+  height: 100%;
+}
 
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   max-width: 430px;
   margin: 0 auto;
   position: relative;
@@ -45,15 +50,14 @@ body {
 
 /* ── HEADER ── */
 .app-header {
-  padding: 56px 20px 18px;
+  padding: 56px 20px 16px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 100;
 }
 
 .app-logo {
@@ -101,7 +105,10 @@ body {
 
 /* ── MAIN ── */
 .main-content {
-  padding: 0 0 100px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 16px;
 }
 
 /* ── VIEWS ── */
@@ -115,18 +122,14 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  flex-shrink: 0;
   width: 100%;
-  max-width: 430px;
   background: var(--surface);
   border-top: 1px solid var(--border);
   display: flex;
@@ -152,11 +155,23 @@ body {
   color: var(--violet-light);
 }
 
-.nav-center .nav-icon {
-  font-size: 26px;
+.nav-icon {
+  font-size: 22px;
+  line-height: 1;
 }
 
-.nav-icon {
+.nav-center .nav-icon {
+  font-size: 24px;
+}
+
+/* Text-character icons: match visual weight of ▣ */
+.nav-icon-money {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.nav-icon-home {
   font-size: 22px;
   line-height: 1;
 }
@@ -171,7 +186,7 @@ body {
 /* ── FAB ── */
 .fab-btn {
   position: fixed;
-  bottom: 105px;
+  bottom: 90px;
   right: 20px;
   width: 54px;
   height: 54px;
@@ -196,21 +211,22 @@ body {
 
 /* ── SUMMARY CARD ── */
 .summary-card {
-  margin: 20px 16px 0;
+  margin: 16px 16px 0;
   background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 50%, #7C3AED 100%);
-  border-radius: 22px;
-  padding: 22px;
+  border-radius: 20px;
+  padding: 18px 20px;
   color: white;
   position: relative;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(109, 40, 217, 0.4);
+  cursor: pointer;
 }
 
 .summary-card::before {
   content: '';
   position: absolute;
   top: -50px; right: -50px;
-  width: 180px; height: 180px;
+  width: 160px; height: 160px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 50%;
 }
@@ -218,17 +234,17 @@ body {
 .summary-card::after {
   content: '';
   position: absolute;
-  bottom: -70px; left: -30px;
-  width: 200px; height: 200px;
+  bottom: -60px; left: -30px;
+  width: 180px; height: 180px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 50%;
 }
 
-.summary-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 18px;
+.summary-card-hint {
+  font-size: 11px;
+  opacity: 0.6;
+  letter-spacing: 0.4px;
+  margin-bottom: 12px;
   position: relative;
   z-index: 1;
 }
@@ -242,46 +258,15 @@ body {
   margin-bottom: 4px;
 }
 
-.summary-income {
-  font-family: 'DM Mono', monospace;
-  font-size: 34px;
-  font-weight: 500;
-  letter-spacing: -1px;
-  line-height: 1;
-}
-
-.summary-add-btn {
-  background: rgba(255, 255, 255, 0.18);
-  border: none;
-  color: white;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 22px;
-  font-weight: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
-  flex-shrink: 0;
-  margin-top: 4px;
-  line-height: 1;
-}
-
-.summary-add-btn:active {
-  background: rgba(255, 255, 255, 0.28);
-}
-
 .summary-row {
   display: flex;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   position: relative;
   z-index: 1;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 11px 16px;
 }
 
 .summary-sep {
@@ -307,11 +292,11 @@ body {
 }
 
 .summary-bar-bg {
-  height: 5px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
   overflow: hidden;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
   position: relative;
   z-index: 1;
 }
@@ -330,12 +315,64 @@ body {
   z-index: 1;
 }
 
+/* Stacked bar inside summary card (dashboard) */
+.summary-stacked-bar {
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  background: rgba(255, 255, 255, 0.18);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── ENTRATE TOTAL CARD ── */
+.entrate-total-card {
+  margin: 16px 16px 0;
+  background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 50%, #7C3AED 100%);
+  border-radius: 20px;
+  padding: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(109, 40, 217, 0.4);
+}
+
+.entrate-total-card::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 140px; height: 140px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.entrate-total-label {
+  font-size: 11px;
+  opacity: 0.7;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.entrate-total-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
 /* ── SECTION HEADER ── */
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 22px 16px 10px;
+  padding: 20px 16px 10px;
 }
 
 .section-title {
@@ -368,13 +405,15 @@ body {
 .pocket-card {
   background: var(--surface);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 13px 16px;
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 12px;
   cursor: pointer;
   transition: background 0.15s, transform 0.12s;
+  position: relative;
+  user-select: none;
 }
 
 .pocket-card:active {
@@ -382,14 +421,63 @@ body {
   transform: scale(0.99);
 }
 
+/* Inactive pocket: greyed out */
+.pocket-inactive {
+  opacity: 0.4;
+  filter: grayscale(0.6);
+}
+
+/* Dragging state */
+.pocket-card.is-dragging {
+  opacity: 0.35;
+  background: var(--surface2);
+}
+
+/* Drag handle */
+.drag-handle {
+  font-size: 16px;
+  color: var(--text-soft);
+  cursor: grab;
+  flex-shrink: 0;
+  padding: 4px 2px;
+  touch-action: none;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Pocket toggle button (active/inactive) */
+.pocket-toggle-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  transition: transform 0.15s;
+}
+
+.pocket-toggle-btn:active {
+  transform: scale(0.85);
+}
+
 .pocket-icon {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 19px;
   flex-shrink: 0;
 }
 
@@ -420,6 +508,70 @@ body {
   color: var(--text-soft);
   flex-shrink: 0;
   margin-left: 4px;
+}
+
+/* ── DASHBOARD ── */
+.dash-list {
+  padding: 8px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dash-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dash-row-name {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+  width: 110px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--surface3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dash-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.dash-pct {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.dash-amt {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  width: 52px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 /* ── PARTNER VIEW ── */
@@ -547,12 +699,13 @@ body {
   color: var(--text-soft);
 }
 
+/* Prevent iOS zoom: inputs must be >= 16px */
 .settings-inline-input {
   background: none;
   border: none;
   outline: none;
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--text);
   flex: 1;
@@ -563,12 +716,16 @@ body {
   color: var(--text-soft);
 }
 
+.settings-date-input {
+  color-scheme: dark;
+}
+
 .settings-inline-amount {
   background: none;
   border: none;
   outline: none;
   font-family: 'DM Mono', monospace;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text);
   width: 80px;
   text-align: right;
@@ -650,13 +807,14 @@ body {
 .modal-sheet {
   background: var(--surface2);
   border-radius: 24px 24px 0 0;
-  padding: 20px 20px 44px;
+  padding: 16px 20px 44px;
   width: 100%;
   max-width: 430px;
   max-height: 92vh;
   overflow-y: auto;
   animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   border-top: 1px solid var(--border);
+  touch-action: pan-y;
 }
 
 @keyframes slideUp {
@@ -665,19 +823,54 @@ body {
 }
 
 .modal-handle {
-  width: 36px;
+  width: 40px;
   height: 4px;
   background: var(--surface3);
   border-radius: 2px;
-  margin: 0 auto 20px;
+  margin: 0 auto 16px;
+  cursor: grab;
+  /* Larger touch area */
+  padding: 10px 0;
+  background-clip: content-box;
+}
+
+/* Modal header: title + X button */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-header .modal-title {
+  margin-bottom: 0;
 }
 
 .modal-title {
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 20px;
   letter-spacing: -0.3px;
   color: var(--text);
+}
+
+.modal-close-x {
+  width: 30px;
+  height: 30px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.modal-close-x:active {
+  background: var(--surface);
 }
 
 /* ── POCKET PREVIEW ── */
@@ -736,7 +929,7 @@ body {
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text);
   background: var(--surface3);
   outline: none;
@@ -823,7 +1016,7 @@ body {
 /* ── EMPTY STATE ── */
 .empty-state {
   text-align: center;
-  padding: 52px 24px;
+  padding: 48px 24px;
   color: var(--text-muted);
 }
 
