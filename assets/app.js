@@ -377,11 +377,14 @@ function renderAll() {
 // ── NAVIGATION ──
 function goTo(page) {
   const inPages = window.location.pathname.includes('/pages/');
-  if (page === 'home') {
-    window.location.href = inPages ? '../index.html' : 'index.html';
-  } else {
-    window.location.href = inPages ? page + '.html' : 'pages/' + page + '.html';
-  }
+  const href = page === 'home'
+    ? (inPages ? '../index.html' : 'index.html')
+    : (inPages ? page + '.html' : 'pages/' + page + '.html');
+
+  // Quick fade-out to mask load delay
+  document.body.style.transition = 'opacity 0.08s ease';
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = href; }, 80);
 }
 
 function goBack() {

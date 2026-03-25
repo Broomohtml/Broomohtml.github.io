@@ -23,9 +23,31 @@ git push
 
 ---
 
-## v3.2 — 2026-03-25
+## v3.3 — 2026-03-25
 
 **Stato: `⏳ NON PUSHATO`**
+
+### Modifiche
+
+#### Header
+- `icon-btn` padding `4px → 10px` + `margin: -10px` (tap target ~44px senza aumentare dimensione visiva)
+- Icona `24px → 26px`
+- Aggiunto `-webkit-tap-highlight-color: transparent`
+
+#### Bottom nav
+- `html` e `body` passati da `height: 100%` a `height: 100dvh` — risolve il gap sul fondo
+- Padding bottom da `32px` a `calc(16px + env(safe-area-inset-bottom))` — rispetta la home indicator iPhone
+
+#### Delay tab switch
+- Aggiunto `<link rel="prefetch">` per i 2 tab vicini in ogni pagina principale (index, entrate, pockets)
+- `goTo()` ora applica un micro fade-out di 80ms prima di navigare → maschera il momento di blank tra pagine
+- Corretto anche un bug: percorso `home` usava `'..\index.html'` (backslash Windows) invece di `'../index.html'`
+
+---
+
+## v3.2 — 2026-03-25
+
+**Stato: `✅ PUSHATO`**
 
 ### Modifiche
 

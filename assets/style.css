@@ -47,13 +47,13 @@
   -webkit-font-smoothing: antialiased;
 }
 
-html { font-size: 16px; height: 100%; }
+html { font-size: 16px; height: 100dvh; }
 
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);
   color: var(--text);
-  height: 100%;
+  height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -85,17 +85,19 @@ body {
   border: none;
   color: var(--text-soft);
   cursor: pointer;
-  padding: 4px;
+  padding: 10px;
+  margin: -10px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .icon-btn:active { color: var(--text); }
 
 .icon-btn .material-symbols-outlined {
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .app-name {
@@ -173,7 +175,7 @@ body {
   box-shadow: 0 -20px 40px rgba(13, 13, 20, 0.4);
   display: flex;
   align-items: flex-end;
-  padding: 10px 32px 32px;
+  padding: 10px 32px calc(16px + env(safe-area-inset-bottom));
   z-index: 200;
 }
 
