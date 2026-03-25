@@ -152,7 +152,8 @@ function renderPockets() {
     return;
   }
 
-  if (count) count.textContent = state.pockets.length + (state.pockets.length === 1 ? ' pocket' : ' pocket attivi');
+  const activeCount = state.pockets.filter(p => p.active !== false).length;
+  if (count) count.textContent = activeCount + (activeCount === 1 ? ' pocket attivo' : ' pocket attivi');
 
   const isOff = p => p.active === false;
 
@@ -230,13 +231,12 @@ function renderDashboard() {
   if (bar) {
     if (income > 0) {
       const segs = activePockets.map(p => {
-        const w = Math.max(0, Math.round((p.amount / income) * 100));
+        const w = Math.min(100, Math.round((p.amount / income) * 100));
         return `<div style="width:${w}%;background:${p.color};height:100%;flex-shrink:0"></div>`;
       });
-      if (libero > 0) {
-        const w = Math.max(0, Math.round((libero / income) * 100));
-        segs.push(`<div style="width:${w}%;background:rgba(255,255,255,0.15);height:100%;flex-shrink:0"></div>`);
-      }
+      // Libero fills remaining space with flex:1 to avoid rounding gaps
+      const libroColor = libero > 0 ? 'rgba(255,255,255,0.15)' : 'transparent';
+      segs.push(`<div style="flex:1;background:${libroColor};height:100%"></div>`);
       bar.innerHTML = segs.join('');
     } else {
       bar.innerHTML = '';

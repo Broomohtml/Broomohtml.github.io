@@ -125,7 +125,11 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.header-avatar:active { opacity: 0.7; }
 
 /* ── MAIN ── */
 .main-content {
@@ -146,6 +150,16 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Hide FOUC on page transitions */
+@keyframes pageIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+body {
+  animation: pageIn 0.12s ease;
 }
 
 /* ── BOTTOM NAV ── */
@@ -289,7 +303,7 @@ body {
   font-family: 'DM Mono', monospace;
   font-size: 20px;
   font-weight: 500;
-  letter-spacing: -0.5px;
+  letter-spacing: 0.02em;
 }
 
 .summary-bar-bg {
@@ -380,9 +394,10 @@ body {
 
 .entrate-hero-value {
   font-family: 'DM Mono', monospace;
-  font-size: 3.5rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 400;
   line-height: 1;
+  letter-spacing: 0.02em;
   letter-spacing: -2px;
   color: white;
 }
@@ -541,6 +556,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.01em;
 }
 
 .pocket-card-sub {
@@ -556,6 +572,7 @@ body {
   font-weight: 500;
   color: var(--text);
   flex-shrink: 0;
+  letter-spacing: 0.02em;
 }
 
 /* Amount in full card (pocket tab) — below name */
@@ -564,6 +581,7 @@ body {
   font-size: 17px;
   font-weight: 500;
   color: var(--violet-light);
+  letter-spacing: 0.02em;
   letter-spacing: -0.3px;
   margin-top: 2px;
 }
@@ -663,6 +681,7 @@ body {
   font-weight: 700;
   color: white;
   margin: 0;
+  letter-spacing: 0.02em;
 }
 
 /* Stacked distribution bar (dashboard hero) */
@@ -724,12 +743,14 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
+  letter-spacing: 0.01em;
 }
 
 .dash-card-amount {
   font-family: 'DM Mono', monospace;
   font-size: 13px;
   color: var(--text);
+  letter-spacing: 0.02em;
 }
 
 .dash-card-bar-row {
@@ -830,8 +851,8 @@ body {
 
 .partner-hero-pct {
   font-family: 'DM Mono', monospace;
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 400;
   color: white;
   margin: 0 0 2px;
   line-height: 1;
