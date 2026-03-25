@@ -19,40 +19,52 @@
 <body data-page="profile">
 
 <header class="app-header">
-  <div class="header-left">
-    <button class="icon-btn" onclick="goBack()">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </button>
-    <span class="page-title">Profilo</span>
-  </div>
+  <button class="icon-btn" onclick="openHamburger()">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+  <span class="app-name">Finance</span>
   <div class="header-avatar" id="headerAvatar">B</div>
 </header>
 
 <main class="main-content">
-  <div class="settings-block">
-    <p class="settings-group-label">Il tuo profilo</p>
-    <div class="settings-item" style="cursor:default">
-      <div class="settings-item-left">
-        <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">
-          <span class="material-symbols-outlined">person</span>
-        </div>
-        <input type="text" class="settings-inline-input" id="profileName" placeholder="Il tuo nome" oninput="saveProfile()" autocomplete="name" />
+  <!-- Avatar hero -->
+  <section class="profile-hero">
+    <div class="profile-avatar-ring">
+      <div class="profile-avatar-circle" id="profileAvatarCircle">B</div>
+    </div>
+    <h2 class="profile-hero-name" id="profileHeroName">Profilo</h2>
+    <p class="profile-hero-sub">Budget planner</p>
+  </section>
+
+  <!-- Fields -->
+  <div class="profile-fields">
+    <div class="profile-field-card">
+      <div class="profile-field-icon" style="background:var(--violet-soft);color:var(--violet-light)">
+        <span class="material-symbols-outlined">person</span>
+      </div>
+      <div class="profile-field-body">
+        <label class="profile-field-label">Nome</label>
+        <input type="text" class="profile-field-input" id="profileName" placeholder="Il tuo nome" oninput="saveProfile()" autocomplete="name" />
       </div>
     </div>
-    <div class="settings-item" style="cursor:default">
-      <div class="settings-item-left">
-        <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">
-          <span class="material-symbols-outlined">cake</span>
-        </div>
-        <input type="date" class="settings-inline-input settings-date-input" id="profileBirthdate" oninput="saveProfile()" />
+
+    <div class="profile-field-card">
+      <div class="profile-field-icon" style="background:var(--violet-soft);color:var(--violet-light)">
+        <span class="material-symbols-outlined">calendar_today</span>
+      </div>
+      <div class="profile-field-body">
+        <label class="profile-field-label">Data di nascita</label>
+        <input type="date" class="profile-field-input settings-date-input" id="profileBirthdate" oninput="saveProfile()" />
       </div>
     </div>
-    <div class="settings-item" style="cursor:default">
-      <div class="settings-item-left">
-        <div class="settings-item-icon" style="background:var(--violet-soft);color:var(--violet-light)">
-          <span class="material-symbols-outlined">work</span>
-        </div>
-        <input type="text" class="settings-inline-input" id="profileJob" placeholder="Posizione lavorativa" oninput="saveProfile()" autocomplete="organization-title" />
+
+    <div class="profile-field-card">
+      <div class="profile-field-icon" style="background:var(--violet-soft);color:var(--violet-light)">
+        <span class="material-symbols-outlined">work</span>
+      </div>
+      <div class="profile-field-body">
+        <label class="profile-field-label">Posizione lavorativa</label>
+        <input type="text" class="profile-field-input" id="profileJob" placeholder="Es. Sviluppatore" oninput="saveProfile()" autocomplete="organization-title" />
       </div>
     </div>
   </div>
@@ -72,6 +84,49 @@
     <span class="nav-label">Pocket</span>
   </button>
 </nav>
+
+<!-- HAMBURGER MENU -->
+<div class="modal-overlay" id="hamburgerMenu">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title">Menu</span>
+      <button class="modal-close-x" onclick="closeHamburger()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="hamburger-items">
+      <button class="hamburger-item" onclick="hamburgerGo('profile')">
+        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <span class="hamburger-item-label">Profilo</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('dashboard')">
+        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
+          <span class="material-symbols-outlined">bar_chart</span>
+        </div>
+        <span class="hamburger-item-label">Dashboard</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('partner')">
+        <div class="hamburger-item-icon" style="background:rgba(236,72,153,0.13);color:#EC4899">
+          <span class="material-symbols-outlined">group</span>
+        </div>
+        <span class="hamburger-item-label">Partner</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('settings')">
+        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
+          <span class="material-symbols-outlined">settings</span>
+        </div>
+        <span class="hamburger-item-label">Impostazioni</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <script src="../assets/app.js"></script>
 <script>

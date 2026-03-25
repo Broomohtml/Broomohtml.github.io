@@ -23,6 +23,37 @@ git push
 
 ---
 
+## v3.1 — 2026-03-25
+
+**Stato: `⏳ NON PUSHATO`**
+
+### Modifiche
+
+#### Allineamento tutte le pagine al design Stitch
+
+- **Entrate**: hero card con gradiente viola, blob decorativi, importo split (numero + €), subtitle "Entrata mensile" sulle card
+- **Pockets**: header centrato 3-col, section-sub dinamico
+- **Dashboard**: hero card con gradiente viola, stacked bar h-14, footer dinamico "Distribuzione tra N pocket", pocket rows come card con bar+percentuale
+- **Partner**: redesign completo — hero gradient card (Tu/Partner %, barra bianca, inner card result), form full-width con inputs arrotondati, info banner
+- **Profile**: hero section con avatar circle (iniziale) + nome + subtitle, field cards con icon+label+input
+- **Settings**: header centrato 3-col + hamburger menu aggiunto
+
+#### app.js
+- `renderEntrate()` usa `entrateTotalNum` + `fmtNum()` + subtitle "Entrata mensile"
+- `renderDashboard()` usa nuovi ids `dashIncome/dashLibero`, stacked bar `dash-stacked-bar`, pocket rows `.dash-card`
+- `renderPartner()` aggiornato: `partnerMyIncome` è `<input>` (value), inner card usa `.partner-inner-text`
+- `saveProfile()` / `loadProfileInputs()` ora chiamano `updateProfileHero()`
+- Aggiunta `updateProfileHero()` per aggiornare avatar + nome nella hero del profilo
+
+#### style.css
+- Aggiunti: `.dash-hero`, `.dash-hero-*`, `.dash-stacked-bar`, `.dash-card`, `.dash-card-*`
+- Aggiornati: `.dash-list` padding 20→24px
+- Aggiunti: `.partner-page-title`, `.partner-hero`, `.partner-hero-*`, `.partner-bar-*`, `.partner-inner-card`, `.partner-form`, `.partner-input`, `.partner-info-banner`
+- Aggiunti: `.profile-hero`, `.profile-avatar-*`, `.profile-field-*`
+- Rimossi: vecchi `.partner-pct-*`, `.partner-example`, `.dash-row`, `.dash-row-name`, `.dash-amt`
+
+---
+
 ## v3.0 — 2026-03-25
 
 **Stato: `✅ PUSHATO`**

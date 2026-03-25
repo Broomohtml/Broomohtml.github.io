@@ -57,6 +57,10 @@ function fmtInt(n) {
   return '€' + Math.round(n).toLocaleString('it-IT');
 }
 
+function fmtNum(n) {
+  return Math.round(n).toLocaleString('it-IT');
+}
+
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
@@ -101,9 +105,9 @@ function renderEntrate() {
   const container = document.getElementById('entrateList');
   if (!container) return;
   const count     = document.getElementById('entrateCount');
-  const totalEl   = document.getElementById('entrateTotalVal');
+  const totalEl   = document.getElementById('entrateTotalNum');
 
-  if (totalEl) totalEl.textContent = fmtInt(totalEntrate());
+  if (totalEl) totalEl.textContent = fmtNum(totalEntrate());
 
   if (state.entrate.length === 0) {
     if (count) count.textContent = '';
@@ -123,6 +127,7 @@ function renderEntrate() {
       <div class="pocket-icon pocket-icon--sm" style="background:${e.color}20;color:${e.color}">${e.emoji}</div>
       <div class="pocket-card-info">
         <div class="pocket-card-name">${e.name}</div>
+        <div class="pocket-card-sub">Entrata mensile</div>
       </div>
       <span class="pocket-card-amount--inline">${fmtInt(e.amount)}</span>
       <span class="material-symbols-outlined pocket-card-chevron">chevron_right</span>
@@ -209,7 +214,9 @@ function renderDashboard() {
   const alloc  = totalPockets();
   const libero = income - alloc;
 
-  // Top card
+  const activePockets = state.pockets.filter(p => p.active !== false);
+
+  // Hero amounts
   const dashIncome = document.getElementById('dashIncome');
   const dashLibero = document.getElementById('dashLibero');
   if (dashIncome) dashIncome.textContent = fmtInt(income);
@@ -218,11 +225,10 @@ function renderDashboard() {
     dashLibero.style.color = libero < 0 ? '#FCA5A5' : 'inherit';
   }
 
-  // Stacked bar (inside summary card)
+  // Stacked distribution bar
   const bar = document.getElementById('dashStackedBar');
   if (bar) {
     if (income > 0) {
-      const activePockets = state.pockets.filter(p => p.active !== false);
       const segs = activePockets.map(p => {
         const w = Math.max(0, Math.round((p.amount / income) * 100));
         return `<div style="width:${w}%;background:${p.color};height:100%;flex-shrink:0"></div>`;
@@ -237,14 +243,14 @@ function renderDashboard() {
     }
   }
 
-  // Pocket list — only active, sorted by amount descending (= % descending)
+  const footer = document.getElementById('dashBarFooter');
+  if (footer) footer.textContent = `Distribuzione tra ${activePockets.length} pocket attivi`;
+
+  // Pocket list — only active, sorted by amount descending
   const list = document.getElementById('dashPocketList');
   if (!list) return;
 
-  const sorted = state.pockets
-    .filter(p => p.active !== false)
-    .slice()
-    .sort((a, b) => b.amount - a.amount);
+  const sorted = activePockets.slice().sort((a, b) => b.amount - a.amount);
 
   if (sorted.length === 0) {
     list.innerHTML = `<div class="empty-state" style="padding:28px 24px">
@@ -258,14 +264,20 @@ function renderDashboard() {
   list.innerHTML = sorted.map(p => {
     const pct = income > 0 ? Math.round((p.amount / income) * 100) : 0;
     return `
-      <div class="dash-row">
-        <div class="dash-dot" style="background:${p.color}"></div>
-        <div class="dash-row-name">${p.emoji} ${p.name}</div>
-        <div class="dash-bar-track">
-          <div class="dash-bar-fill" style="width:${pct}%;background:${p.color}"></div>
+      <div class="dash-card">
+        <div class="dash-card-top">
+          <div class="dash-card-left">
+            <div class="dash-dot" style="background:${p.color}"></div>
+            <span class="dash-card-name">${p.emoji} ${p.name}</span>
+          </div>
+          <span class="dash-card-amount">${fmtInt(p.amount)}</span>
         </div>
-        <span class="dash-pct">${pct}%</span>
-        <span class="dash-amt">${fmtInt(p.amount)}</span>
+        <div class="dash-card-bar-row">
+          <div class="dash-bar-track">
+            <div class="dash-bar-fill" style="width:${pct}%;background:${p.color}"></div>
+          </div>
+          <span class="dash-pct">${pct}%</span>
+        </div>
       </div>`;
   }).join('');
 }
@@ -289,20 +301,20 @@ function renderPartner() {
   document.getElementById('partnerAmtB').textContent    = fmtInt(amtB);
   document.getElementById('partnerBarFill').style.width = pctA + '%';
 
-  const myNameEl  = document.getElementById('partnerMyName');
   const myIncomeEl = document.getElementById('partnerMyIncome');
-  if (myNameEl)   myNameEl.textContent  = myName;
-  if (myIncomeEl) myIncomeEl.textContent = fmtInt(amtA);
+  if (myIncomeEl) myIncomeEl.value = fmtInt(amtA);
 
   const example = document.getElementById('partnerExample');
-  if (total > 0) {
-    example.innerHTML = `
-      <div class="partner-example-text">
-        Per ogni <strong>€100</strong> di spesa comune:<br>
-        ${myName} paga <strong>${fmtInt(pctA)}</strong> · ${nameB} paga <strong>${fmtInt(pctB)}</strong>
-      </div>`;
-  } else {
-    example.innerHTML = '';
+  if (example) {
+    if (total > 0) {
+      example.innerHTML = `
+        <div class="partner-inner-text">
+          Per ogni <strong>€100</strong> di spesa comune:<br>
+          <strong>${myName} paga €${pctA}</strong> · ${nameB} paga €${pctB}
+        </div>`;
+    } else {
+      example.innerHTML = '';
+    }
   }
 
   state.partner = { nameB, amtB };
@@ -322,6 +334,7 @@ function loadProfileInputs() {
   document.getElementById('profileName').value      = p.name      || '';
   document.getElementById('profileBirthdate').value = p.birthdate || '';
   document.getElementById('profileJob').value       = p.job       || '';
+  updateProfileHero();
 }
 
 function saveProfile() {
@@ -332,10 +345,17 @@ function saveProfile() {
   };
   saveState();
   updateHeaderAvatar();
-  const myNameEl = document.getElementById('partnerMyName');
-  const nameA    = document.getElementById('partnerNameA');
-  if (myNameEl) myNameEl.textContent = profileName();
-  if (nameA)    nameA.textContent    = profileName();
+  updateProfileHero();
+  const nameA = document.getElementById('partnerNameA');
+  if (nameA) nameA.textContent = profileName();
+}
+
+function updateProfileHero() {
+  const name = profileName();
+  const heroName = document.getElementById('profileHeroName');
+  const heroCircle = document.getElementById('profileAvatarCircle');
+  if (heroName) heroName.textContent = name;
+  if (heroCircle) heroCircle.textContent = name.charAt(0).toUpperCase();
 }
 
 function updateHeaderAvatar() {

@@ -19,12 +19,10 @@
 <body data-page="settings">
 
 <header class="app-header">
-  <div class="header-left">
-    <button class="icon-btn" onclick="goBack()">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </button>
-    <span class="page-title">Impostazioni</span>
-  </div>
+  <button class="icon-btn" onclick="openHamburger()">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+  <span class="app-name">Finance</span>
   <div class="header-avatar" id="headerAvatar">B</div>
 </header>
 
@@ -60,6 +58,49 @@
     <span class="nav-label">Pocket</span>
   </button>
 </nav>
+
+<!-- HAMBURGER MENU -->
+<div class="modal-overlay" id="hamburgerMenu">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title">Menu</span>
+      <button class="modal-close-x" onclick="closeHamburger()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="hamburger-items">
+      <button class="hamburger-item" onclick="hamburgerGo('profile')">
+        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <span class="hamburger-item-label">Profilo</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('dashboard')">
+        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
+          <span class="material-symbols-outlined">bar_chart</span>
+        </div>
+        <span class="hamburger-item-label">Dashboard</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('partner')">
+        <div class="hamburger-item-icon" style="background:rgba(236,72,153,0.13);color:#EC4899">
+          <span class="material-symbols-outlined">group</span>
+        </div>
+        <span class="hamburger-item-label">Partner</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+      <button class="hamburger-item" onclick="hamburgerGo('settings')">
+        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
+          <span class="material-symbols-outlined">settings</span>
+        </div>
+        <span class="hamburger-item-label">Impostazioni</span>
+        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <script src="../assets/app.js"></script>
 <script>

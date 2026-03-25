@@ -19,33 +19,35 @@
 <body data-page="dashboard">
 
 <header class="app-header">
-  <div class="header-left">
-    <button class="icon-btn" onclick="goBack()">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </button>
-    <span class="page-title">Dashboard</span>
-  </div>
+  <button class="icon-btn" onclick="openHamburger()">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+  <span class="app-name">Finance</span>
   <div class="header-avatar" id="headerAvatar">B</div>
 </header>
 
 <main class="main-content">
-  <section class="summary-card" style="cursor:default">
-    <div class="summary-row" style="margin-bottom:12px">
-      <div class="summary-mini">
-        <p class="summary-mini-label">Entrate mensili</p>
-        <p class="summary-mini-amount" id="dashIncome">€0</p>
+  <section class="dash-hero">
+    <div class="dash-hero-blob"></div>
+    <div class="dash-hero-row">
+      <div>
+        <p class="dash-hero-label">Entrate mensili</p>
+        <p class="dash-hero-amount" id="dashIncome">€0</p>
       </div>
-      <div class="summary-sep"></div>
-      <div class="summary-mini summary-mini--right">
-        <p class="summary-mini-label">Libero</p>
-        <p class="summary-mini-amount" id="dashLibero">€0</p>
+      <div style="text-align:right">
+        <p class="dash-hero-label">Libero</p>
+        <p class="dash-hero-amount" id="dashLibero">€0</p>
       </div>
     </div>
-    <div class="summary-stacked-bar" id="dashStackedBar"></div>
+    <div class="dash-stacked-bar" id="dashStackedBar"></div>
+    <p class="dash-hero-footer" id="dashBarFooter"></p>
   </section>
 
   <div class="section-header">
-    <h2 class="section-heading">Distribuzione</h2>
+    <h2 class="section-heading">Pockets</h2>
+    <a class="section-link" onclick="goTo('pockets')">
+      Gestisci <span class="material-symbols-outlined section-link-icon">arrow_forward</span>
+    </a>
   </div>
   <div class="dash-list" id="dashPocketList"></div>
 </main>
