@@ -23,9 +23,36 @@ git push
 
 ---
 
-## v3.1 — 2026-03-25
+## v3.2 — 2026-03-25
 
 **Stato: `⏳ NON PUSHATO`**
+
+### Modifiche
+
+#### Fix UI
+- **Nav flash**: aggiunto `animation: pageIn 0.12s ease` sul body per mascherare il FOUC dei Material Symbols durante la transizione tra pagine
+- **Entrate hero**: `font-size 3.5rem → 2.5rem`, `font-weight 700 → 400`
+- **Partner percentuali**: `font-size 1.75rem → 1.5rem`, `font-weight 700 → 400`
+- **Avatar → Profilo**: aggiunto `onclick="goTo('profile')"` sull'avatar header in tutti gli HTML + `cursor:pointer` + `:active` nel CSS
+
+#### Fix lettera-spaziatura
+- Aggiunto `letter-spacing: 0.02em` su tutti gli elementi numerici DM Mono (`pocket-card-amount--inline`, `pocket-card-amount--sub`, `dash-card-amount`, `dash-hero-amount`, `summary-mini-amount`, `entrate-hero-value`)
+- Aggiunto `letter-spacing: 0.01em` sui nomi delle card (`pocket-card-name`, `dash-card-name`)
+- Rimosso `letter-spacing: -0.5px` da `summary-mini-amount`
+
+#### Fix dashboard barra
+- La barra stackata usava `Math.round()` su ogni segmento, lasciando un gap visibile
+- Il segmento "libero" ora usa `flex:1` invece di una larghezza calcolata → si espande per riempire lo spazio residuo senza gaps
+
+#### Fix contatore pocket
+- `renderPockets()` mostrava `state.pockets.length` (tutti) invece dei soli attivi
+- Ora conta solo `p.active !== false` e usa la forma singolare/plurale corretta
+
+---
+
+## v3.1 — 2026-03-25
+
+**Stato: `✅ PUSHATO`**
 
 ### Modifiche
 
