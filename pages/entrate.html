@@ -7,65 +7,44 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Finance" />
   <meta name="theme-color" content="#0D0D14" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="apple-touch-icon" href="../icon-192.png" />
   <title>Finance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="../assets/style.css" />
 </head>
-<body data-page="home">
+<body data-page="entrate">
 
 <header class="app-header">
-  <button class="icon-btn" onclick="openHamburger()">
-    <span class="material-symbols-outlined">menu</span>
-  </button>
-  <span class="app-name">Finance</span>
+  <div class="header-left">
+    <button class="icon-btn" onclick="openHamburger()">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <span class="app-name">Finance</span>
+  </div>
   <div class="header-avatar" id="headerAvatar">B</div>
 </header>
 
 <main class="main-content">
-  <section class="summary-card" onclick="goTo('dashboard')">
-    <div class="summary-card-top">
-      <span class="summary-card-label-sm">Dashboard ↗</span>
-      <span class="material-symbols-outlined summary-card-more">more_horiz</span>
-    </div>
-    <div class="summary-row">
-      <div class="summary-mini">
-        <p class="summary-mini-label">Allocato</p>
-        <p class="summary-mini-amount" id="summaryAllocato">€0</p>
-      </div>
-      <div class="summary-sep"></div>
-      <div class="summary-mini summary-mini--right">
-        <p class="summary-mini-label">Libero</p>
-        <p class="summary-mini-amount" id="summaryLibero">€0</p>
-      </div>
-    </div>
-    <div class="summary-bar-bg">
-      <div class="summary-bar-fill" id="summaryBarFill" style="width:0%"></div>
-    </div>
-    <div class="summary-bar-footer">
-      <span class="summary-bar-label" id="summaryBarLabel">0% del reddito allocato</span>
-    </div>
+  <section class="entrate-hero">
+    <div class="hero-blob hero-blob--tr"></div>
+    <div class="hero-blob hero-blob--bl"></div>
+    <p class="entrate-hero-label">Entrate mensili totali</p>
+    <p class="entrate-hero-value" id="entrateTotalVal">€0</p>
   </section>
 
-  <div class="section-header section-header--home">
-    <h2 class="section-heading">I tuoi pocket</h2>
-    <a class="section-link" onclick="goTo('pockets')">
-      Gestisci <span class="material-symbols-outlined section-link-icon">arrow_forward</span>
-    </a>
-  </div>
-  <div class="pocket-list" id="homePocketsList"></div>
+  <div class="pocket-list" id="entrateList"></div>
 </main>
 
 <nav class="bottom-nav">
-  <button class="nav-item" onclick="goTo('entrate')">
+  <button class="nav-item active" onclick="goTo('entrate')">
     <span class="material-symbols-outlined nav-icon">payments</span>
     <span class="nav-label">Entrate</span>
   </button>
-  <button class="nav-item active nav-item--center">
+  <button class="nav-item nav-item--center" onclick="goTo('home')">
     <span class="material-symbols-outlined nav-icon">home</span>
     <span class="nav-label">Home</span>
   </button>
@@ -75,41 +54,45 @@
   </button>
 </nav>
 
-<!-- POCKET MODAL -->
-<div class="modal-overlay" id="pocketModal">
+<button class="fab" onclick="openEntrataModal()">
+  <span class="material-symbols-outlined">add</span>
+</button>
+
+<!-- ENTRATA MODAL -->
+<div class="modal-overlay" id="entrataModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <span class="modal-title" id="pocketModalTitle">Nuovo pocket</span>
-      <button class="modal-close-x" onclick="closePocketModal()">
+      <span class="modal-title" id="entrataModalTitle">Nuova entrata</span>
+      <button class="modal-close-x" onclick="closeEntrataModal()">
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
     <div class="pocket-preview">
-      <div class="pocket-preview-icon" id="pocketPreviewIcon">💳</div>
+      <div class="pocket-preview-icon" id="entrataPreviewIcon">💼</div>
       <div>
-        <p class="pocket-preview-name" id="pocketPreviewName">Pocket</p>
-        <p class="pocket-preview-amount" id="pocketPreviewAmount">€0 / mese</p>
+        <p class="pocket-preview-name" id="entrataPreviewName">Entrata</p>
+        <p class="pocket-preview-amount" id="entrataPreviewAmount">€0 / mese</p>
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Emoji</label>
-      <input type="text" class="form-input emoji-input" id="pocketEmoji" placeholder="💳" maxlength="2" oninput="updatePocketPreview()" />
+      <input type="text" class="form-input emoji-input" id="entrataEmoji" placeholder="💼" maxlength="2" oninput="updateEntrataPreview()" />
     </div>
     <div class="form-group">
-      <label class="form-label">Nome</label>
-      <input type="text" class="form-input" id="pocketName" placeholder="es. Affitto" oninput="updatePocketPreview()" />
+      <label class="form-label">Causale</label>
+      <input type="text" class="form-input" id="entrataName" placeholder="es. Stipendio" oninput="updateEntrataPreview()" />
     </div>
     <div class="form-group">
       <label class="form-label">Importo mensile (€)</label>
-      <input type="number" class="form-input" id="pocketAmount" placeholder="400" min="0" step="1" inputmode="numeric" oninput="updatePocketPreview()" />
+      <input type="number" class="form-input" id="entrataAmount" placeholder="1800" min="0" step="1" inputmode="numeric" oninput="updateEntrataPreview()" />
     </div>
     <div class="form-group">
       <label class="form-label">Colore</label>
-      <div class="color-swatches" id="pocketColorSwatches"></div>
+      <div class="color-swatches" id="entrataColorSwatches"></div>
     </div>
-    <button class="submit-btn" onclick="savePocket()">Salva pocket</button>
-    <button class="delete-btn" id="pocketDeleteBtn" onclick="deletePocketFromModal()" style="display:none">Elimina pocket</button>
+    <button class="submit-btn" onclick="saveEntrata()">Salva entrata</button>
+    <button class="delete-btn" id="entrataDeleteBtn" onclick="deleteEntrataFromModal()" style="display:none">Elimina entrata</button>
   </div>
 </div>
 
@@ -156,10 +139,10 @@
   </div>
 </div>
 
-<script src="assets/app.js"></script>
+<script src="../assets/app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
   }
 </script>
 </body>

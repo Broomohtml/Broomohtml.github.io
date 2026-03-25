@@ -47,7 +47,6 @@ function saveState() {
 }
 
 let state = loadState();
-let currentView = 'home';
 let editingPocketId   = null;
 let editingEntrataId  = null;
 let selectedPocketColor  = POCKET_COLORS[0];
@@ -79,12 +78,15 @@ function profileName() {
 
 // ── RENDER SUMMARY (Home) ──
 function renderSummary() {
+  const allocEl = document.getElementById('summaryAllocato');
+  if (!allocEl) return;
+
   const income = totalEntrate();
   const alloc  = totalPockets();
   const libero = income - alloc;
   const pct    = income > 0 ? Math.min((alloc / income) * 100, 100) : 0;
 
-  document.getElementById('summaryAllocato').textContent = fmtInt(alloc);
+  allocEl.textContent = fmtInt(alloc);
 
   const liberoEl = document.getElementById('summaryLibero');
   liberoEl.textContent = fmtInt(Math.abs(libero));
@@ -97,6 +99,7 @@ function renderSummary() {
 // ── RENDER ENTRATE ──
 function renderEntrate() {
   const container = document.getElementById('entrateList');
+  if (!container) return;
   const count     = document.getElementById('entrateCount');
   const totalEl   = document.getElementById('entrateTotalVal');
 
@@ -117,12 +120,12 @@ function renderEntrate() {
 
   container.innerHTML = state.entrate.map(e => `
     <div class="pocket-card" onclick="openEntrataModal('${e.id}')">
-      <div class="pocket-icon" style="background:${e.color}22;color:${e.color}">${e.emoji}</div>
+      <div class="pocket-icon pocket-icon--sm" style="background:${e.color}20;color:${e.color}">${e.emoji}</div>
       <div class="pocket-card-info">
         <div class="pocket-card-name">${e.name}</div>
       </div>
-      <div class="pocket-card-amount">${fmtInt(e.amount)}</div>
-      <div class="pocket-card-arrow">›</div>
+      <span class="pocket-card-amount--inline">${fmtInt(e.amount)}</span>
+      <span class="material-symbols-outlined pocket-card-chevron">chevron_right</span>
     </div>
   `).join('');
 }
@@ -130,10 +133,11 @@ function renderEntrate() {
 // ── RENDER POCKETS (tab pocket — con drag handle e toggle) ──
 function renderPockets() {
   const container = document.getElementById('pocketsList');
+  if (!container) return;
   const count     = document.getElementById('pocketsCount');
 
   if (state.pockets.length === 0) {
-    if (count) count.textContent = '';
+    if (count) count.textContent = 'Gestisci i tuoi budget mensili';
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">💳</div>
@@ -143,23 +147,25 @@ function renderPockets() {
     return;
   }
 
-  if (count) count.textContent = state.pockets.length + ' pocket';
+  if (count) count.textContent = state.pockets.length + (state.pockets.length === 1 ? ' pocket' : ' pocket attivi');
+
+  const isOff = p => p.active === false;
 
   container.innerHTML = state.pockets.map((p, idx) => `
-    <div class="pocket-card ${p.active === false ? 'pocket-inactive' : ''}"
+    <div class="pocket-card pocket-card--full ${isOff(p) ? 'pocket-card--inactive' : ''}"
          data-id="${p.id}" data-idx="${idx}"
          onclick="openPocketModal('${p.id}')">
-      <div class="drag-handle" data-idx="${idx}" onclick="event.stopPropagation()">⠿</div>
-      <div class="pocket-icon" style="background:${p.color}22;color:${p.color}">${p.emoji}</div>
+      <div class="drag-handle" data-idx="${idx}" onclick="event.stopPropagation()">
+        <span class="material-symbols-outlined">drag_indicator</span>
+      </div>
+      <div class="pocket-icon pocket-icon--lg" style="background:${p.color}20;color:${p.color}">${p.emoji}</div>
       <div class="pocket-card-info">
         <div class="pocket-card-name">${p.name}</div>
+        <div class="pocket-card-amount--sub">${fmtInt(p.amount)}</div>
       </div>
-      <div class="pocket-card-amount">${fmtInt(p.amount)}</div>
-      <button class="pocket-toggle-btn"
-              style="color:${p.active === false ? 'var(--text-soft)' : p.color}"
-              onclick="togglePocket('${p.id}', event)"
-              title="${p.active === false ? 'Attiva' : 'Disattiva'}">
-        ${p.active === false ? '○' : '●'}
+      <button class="pocket-toggle ${isOff(p) ? 'pocket-toggle--off' : ''}"
+              onclick="togglePocket('${p.id}', event)">
+        <div class="pocket-toggle-dot"></div>
       </button>
     </div>
   `).join('');
@@ -167,7 +173,7 @@ function renderPockets() {
   initDragHandles();
 }
 
-// ── RENDER HOME POCKETS (solo attivi, senza controlli) ──
+// ── RENDER HOME POCKETS (solo attivi, card compatte) ──
 function renderHomePockets() {
   const container = document.getElementById('homePocketsList');
   if (!container) return;
@@ -176,7 +182,7 @@ function renderHomePockets() {
 
   if (active.length === 0) {
     container.innerHTML = `
-      <div class="empty-state" style="padding:28px 24px">
+      <div class="empty-state" style="padding:28px 20px">
         <div class="empty-state-icon">💳</div>
         <div class="empty-state-text">Nessun pocket attivo</div>
         <div class="empty-state-sub">Vai su Pocket per crearne o attivarne uno</div>
@@ -186,12 +192,13 @@ function renderHomePockets() {
 
   container.innerHTML = active.map(p => `
     <div class="pocket-card" onclick="openPocketModal('${p.id}')">
-      <div class="pocket-icon" style="background:${p.color}22;color:${p.color}">${p.emoji}</div>
+      <div class="pocket-icon pocket-icon--sm" style="background:${p.color}20;color:${p.color}">${p.emoji}</div>
       <div class="pocket-card-info">
         <div class="pocket-card-name">${p.name}</div>
+        <div class="pocket-card-sub">Budget mensile</div>
       </div>
-      <div class="pocket-card-amount">${fmtInt(p.amount)}</div>
-      <div class="pocket-card-arrow">›</div>
+      <span class="pocket-card-amount--inline">${fmtInt(p.amount)}</span>
+      <span class="material-symbols-outlined pocket-card-chevron">chevron_right</span>
     </div>
   `).join('');
 }
@@ -324,11 +331,18 @@ function saveProfile() {
     job:       document.getElementById('profileJob').value.trim(),
   };
   saveState();
-  // Propagate name to partner view if open
+  updateHeaderAvatar();
   const myNameEl = document.getElementById('partnerMyName');
   const nameA    = document.getElementById('partnerNameA');
   if (myNameEl) myNameEl.textContent = profileName();
   if (nameA)    nameA.textContent    = profileName();
+}
+
+function updateHeaderAvatar() {
+  const el = document.getElementById('headerAvatar');
+  if (!el) return;
+  const name = profileName();
+  el.textContent = name.charAt(0).toUpperCase();
 }
 
 // ── RENDER ALL ──
@@ -341,26 +355,17 @@ function renderAll() {
 }
 
 // ── NAVIGATION ──
-function showView(view) {
-  currentView = view;
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + view).classList.add('active');
-
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navBtn = document.querySelector(`[data-view="${view}"]`);
-  if (navBtn) navBtn.classList.add('active');
-
-  const fab = document.getElementById('fabAdd');
-  fab.style.display = (view === 'entrate' || view === 'pockets') ? 'flex' : 'none';
-
-  if (view === 'partner')   loadPartnerInputs();
-  if (view === 'profile')   loadProfileInputs();
-  if (view === 'dashboard') renderDashboard();
+function goTo(page) {
+  const inPages = window.location.pathname.includes('/pages/');
+  if (page === 'home') {
+    window.location.href = inPages ? '../index.html' : 'index.html';
+  } else {
+    window.location.href = inPages ? page + '.html' : 'pages/' + page + '.html';
+  }
 }
 
-function onFabClick() {
-  if (currentView === 'entrate') openEntrataModal(null);
-  else if (currentView === 'pockets') openPocketModal(null);
+function goBack() {
+  window.history.back();
 }
 
 // ── HAMBURGER ──
@@ -372,9 +377,9 @@ function closeHamburger() {
   document.getElementById('hamburgerMenu').classList.remove('open');
 }
 
-function hamburgerGo(view) {
+function hamburgerGo(page) {
   closeHamburger();
-  showView(view);
+  goTo(page);
 }
 
 // ── COLOR SWATCHES ──
@@ -632,7 +637,7 @@ function confirmClearAll() {
     state.pockets = [];
     state.entrate = [];
     saveState();
-    renderAll();
+    goTo('home');
   }
 }
 
@@ -686,14 +691,36 @@ function setupDragToDismiss(overlayId, closeFunc) {
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
-  showView('home');
-  renderAll();
+  updateHeaderAvatar();
 
-  document.getElementById('pocketModal').addEventListener('click',   e => { if (e.target === e.currentTarget) closePocketModal(); });
-  document.getElementById('entrataModal').addEventListener('click',  e => { if (e.target === e.currentTarget) closeEntrataModal(); });
-  document.getElementById('hamburgerMenu').addEventListener('click', e => { if (e.target === e.currentTarget) closeHamburger(); });
+  // Setup modals that exist on this page
+  if (document.getElementById('pocketModal')) {
+    document.getElementById('pocketModal').addEventListener('click', e => { if (e.target === e.currentTarget) closePocketModal(); });
+    setupDragToDismiss('pocketModal', closePocketModal);
+  }
+  if (document.getElementById('entrataModal')) {
+    document.getElementById('entrataModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeEntrataModal(); });
+    setupDragToDismiss('entrataModal', closeEntrataModal);
+  }
+  if (document.getElementById('hamburgerMenu')) {
+    document.getElementById('hamburgerMenu').addEventListener('click', e => { if (e.target === e.currentTarget) closeHamburger(); });
+    setupDragToDismiss('hamburgerMenu', closeHamburger);
+  }
 
-  setupDragToDismiss('pocketModal',   closePocketModal);
-  setupDragToDismiss('entrataModal',  closeEntrataModal);
-  setupDragToDismiss('hamburgerMenu', closeHamburger);
+  // Page-specific init
+  const page = document.body.dataset.page || 'home';
+  if (page === 'home') {
+    renderSummary();
+    renderHomePockets();
+  } else if (page === 'entrate') {
+    renderEntrate();
+  } else if (page === 'pockets') {
+    renderPockets();
+  } else if (page === 'dashboard') {
+    renderDashboard();
+  } else if (page === 'partner') {
+    loadPartnerInputs();
+  } else if (page === 'profile') {
+    loadProfileInputs();
+  }
 });

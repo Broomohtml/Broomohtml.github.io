@@ -1,111 +1,128 @@
-<!--
-COMANDI PER PUBBLICARE UNA NUOVA VERSIONE:
-  git add .
-  git commit -m "New UI and UX"
-  git push
--->
+# Finance App — Documentazione
 
-# 💜 Finance App — Documentazione Progetto
-
-## 🔗 Link utili
+## Link utili
 - **App live:** https://broomohtml.github.io
-- **Repository GitHub:** https://github.com/Broomohtml/Broomohtml.github.io
+- **Repository:** https://github.com/Broomohtml/Broomohtml.github.io
 - **Live Server locale:** http://127.0.0.1:5500
 
 ---
 
-## 📱 Come installare su iPhone
-1. Apri **Safari** (non Chrome)
-2. Vai su `https://broomohtml.github.io`
-3. Tocca il pulsante **Condividi** (quadrato con freccia ↑)
-4. Tocca **"Aggiungi a schermata Home"**
-5. Nome: **Finance** → Aggiungi
-
-> ✅ L'icona sulla home si aggiorna automaticamente ad ogni push. Non serve reinstallarla.
-
----
-
-## 🗂️ Struttura file
+## Struttura file
 
 ```
 finance-app/
-├── index.html       → Struttura e layout dell'app
-├── style.css        → Stile visivo (dark mode, viola)
-├── app.js           → Tutta la logica e i dati
-├── manifest.json    → Configurazione PWA
-├── sw.js            → Service Worker (funziona offline)
-└── DOC.md           → Questo file
+│
+├── index.html              → Home (root — obbligatorio per PWA)
+├── manifest.json           → Configurazione PWA (root)
+├── sw.js                   → Service Worker (root)
+│
+├── pages/                  → Pagine secondarie
+│   ├── entrate.html
+│   ├── pockets.html
+│   ├── dashboard.html
+│   ├── partner.html
+│   ├── profile.html
+│   └── settings.html
+│
+├── assets/                 → Stili e script
+│   ├── app.js              → Tutta la logica (state, render, navigazione)
+│   └── style.css           → Stile visivo globale
+│
+├── Stitch/                 → Design di riferimento
+│   ├── home_optimized_layout/
+│   ├── entrate_monthly_income/
+│   ├── pocket_management/
+│   ├── dashboard_analysis/
+│   ├── partner_joint_budget_fixed/
+│   ├── profilo_user_details/
+│   ├── impostazioni_danger_zone/
+│   └── design_system/
+│
+├── _archive/               → File vecchi / non usati
+├── DOC.md                  → Documentazione completa
+├── README.md               → Guida rapida
+└── version.md              → Changelog
 ```
 
 ---
 
-## 📌 Cos'è questa app
+## REGOLA STITCH — DA RISPETTARE SEMPRE
 
-Un **budget planner mensile** ispirato ai pocket di Revolut.
-Non traccia transazioni precise: serve solo a vedere come viene diviso lo stipendio ogni mese tra voci fisse (affitto, cibo, gaming, ecc.).
+> **Per qualsiasi modifica visiva a una pagina, la fonte di verità è la cartella `Stitch/` corrispondente.**
+
+### Mappatura pagina → cartella Stitch
+
+| Pagina | Cartella Stitch |
+|--------|----------------|
+| `index.html` | `Stitch/home_optimized_layout/` |
+| `entrate.html` | `Stitch/entrate_monthly_income/` |
+| `pockets.html` | `Stitch/pocket_management/` |
+| `dashboard.html` | `Stitch/dashboard_analysis/` |
+| `partner.html` | `Stitch/partner_joint_budget_fixed/` |
+| `profile.html` | `Stitch/profilo_user_details/` |
+| `settings.html` | `Stitch/impostazioni_danger_zone/` |
+| Token/colori globali | `Stitch/design_system/` |
+
+### Cosa fa Claude quando tocca una pagina
+
+1. **Legge `Stitch/<pagina>/code.html`** — è il riferimento visivo assoluto
+2. **Estrae layout, classi CSS, struttura HTML** da quel file
+3. **Adatta il codice**: sostituisce Tailwind/classi Stitch con le classi del `style.css` del progetto (o aggiunge le classi mancanti)
+4. **Collega la logica**: mantiene tutti gli `id`, `onclick`, e funzioni JS esistenti
+5. **Non inventa niente visivamente** — il risultato finale deve essere identico a `screen.png` nella stessa cartella
+
+### Cosa NON fa Claude
+
+- Non cambia la logica in `app.js` se non è necessario per il funzionamento della pagina
+- Non cambia il look se l'utente non ha chiesto una modifica visiva
+- Non usa Tailwind nell'output finale (il progetto usa CSS custom in `style.css`)
 
 ---
 
-## ✏️ Modifiche comuni
+## Navigazione (multi-page)
 
-### Cambiare i pocket di default
-In `app.js`, modifica l'array in cima al file:
+L'app è composta da pagine HTML separate. La navigazione avviene con:
+
 ```js
-const DEFAULT_POCKETS = [
-  { id: 'affitto', name: 'Affitto', emoji: '🏠', amount: 400, color: '#7C3AED' },
-  { id: 'emergenze', name: 'Emergenze', emoji: '🚨', amount: 250, color: '#EF4444' },
-  ...
-];
+goTo('home')       // → index.html
+goTo('entrate')    // → entrate.html
+goTo('pockets')    // → pockets.html
+goTo('dashboard')  // → dashboard.html
+goTo('partner')    // → partner.html
+goTo('profile')    // → profile.html
+goTo('settings')   // → settings.html
+goBack()           // → window.history.back()
 ```
 
-### Cambiare lo stipendio di default
-In `app.js`, cerca:
-```js
-entrate: parseInt(localStorage.getItem('fx_entrate') || '1800'),
-```
-Cambia `1800` con il tuo importo.
-
-### Cambiare colore principale
-In `style.css`, cerca:
-```css
---violet: #7C3AED;
-```
+Ogni pagina ha `data-page="<nome>"` sul `<body>` — usato da `app.js` per l'init page-aware.
 
 ---
 
-## 🎨 Scelte estetiche
-- **Font:** DM Sans + DM Mono
-- **Tema:** Dark mode (sfondo `#0D0D14`)
-- **Colore principale:** Viola `#7C3AED`
-- **Valuta:** Euro €
+## Dati (localStorage)
 
----
-
-## 💾 Come funzionano i dati
-I dati sono salvati nel **localStorage** del telefono/browser:
-- ✅ Funziona offline
-- ✅ Nessun server necessario
-- ⚠️ I dati sono legati al dispositivo (non sincronizzati tra telefono e PC)
-
-Chiavi localStorage usate:
 | Chiave | Contenuto |
-|---|---|
-| `fx_pockets` | Array dei pocket con nome, emoji, importo, colore |
-| `fx_entrate` | Importo mensile delle entrate (intero) |
+|--------|-----------|
+| `fx_pockets` | Array pocket `{ id, name, emoji, amount, color, active }` |
+| `fx_entrate_list` | Array entrate `{ id, name, emoji, amount, color }` |
+| `fx_partner` | `{ nameB, amtB }` |
+| `fx_profile` | `{ name, birthdate, job }` |
 
 ---
 
-## 🚀 Sezioni dell'app
-| Sezione | Descrizione |
-|---|---|
-| ◈ Pocket | Riepilogo entrate/allocato/scarto + lista pocket |
-| ⚙ Impostazioni | Modifica stipendio, elimina tutti i pocket |
+## Installazione su iPhone
+
+1. Apri **Safari** → `https://broomohtml.github.io`
+2. Tocca **Condividi** → **Aggiungi a schermata Home**
+3. L'icona si aggiorna ad ogni push, non serve reinstallare
 
 ---
 
-## 🛠️ Tecnologie usate
-- HTML / CSS / JavaScript puro
-- Font: DM Sans + DM Mono (Google Fonts)
-- Service Worker (offline, cache `finance-v3`)
-- localStorage (dati salvati sul dispositivo)
-- GitHub Pages (hosting gratuito)
+## Come pubblicare
+
+```bash
+git add .
+git commit -m "vX.X — descrizione"
+git push
+```
+
+Poi aggiorna `version.md`: cambia lo stato da `⏳ NON PUSHATO` a `✅ PUSHATO`.

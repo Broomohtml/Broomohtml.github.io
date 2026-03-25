@@ -23,9 +23,40 @@ git push
 
 ---
 
+## v3.0 — 2026-03-25
+
+**Stato: `✅ PUSHATO`**
+
+### Modifiche
+
+#### Architettura multi-pagina
+- L'app era una SPA con tutte le view in `index.html`; ora ogni sezione è una pagina HTML separata
+- `index.html` → Home
+- `entrate.html` → Entrate
+- `pockets.html` → Pocket
+- `dashboard.html` → Dashboard
+- `partner.html` → Partner
+- `profile.html` → Profilo
+- `settings.html` → Impostazioni
+
+#### Navigazione
+- Sostituita la funzione `showView()` con `goTo(page)` (navigazione tramite `window.location.href`)
+- Aggiunta `goBack()` per le pagine secondarie (usa `window.history.back()`)
+- Il menu hamburger usa `hamburgerGo(page)` → chiude il menu e naviga
+
+#### `app.js` — init page-aware
+- Il `DOMContentLoaded` ora legge `data-page` dal body e inizializza solo i componenti rilevanti
+- Le funzioni di render hanno guard `if (!container) return` per essere sicure su ogni pagina
+
+#### Service Worker
+- Cache aggiornata: `finance-v6` → `finance-v7`
+- Aggiunge alle cache tutte le nuove pagine HTML
+
+---
+
 ## v2.1 — 2026-03-24
 
-**Stato: `⏳ NON PUSHATO`**
+**Stato: `✅ PUSHATO`**
 
 ### Modifiche
 
