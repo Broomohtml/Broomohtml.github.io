@@ -175,8 +175,7 @@ body {
   position: fixed;
   left: 16px;
   right: 16px;
-  bottom: 12px;
-  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  bottom: 16px;
   max-width: 398px;
   margin: 0 auto;
   background: rgba(26, 26, 46, 0.88);
@@ -237,7 +236,6 @@ body {
 .fab {
   position: fixed;
   bottom: 100px;
-  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
   right: 24px;
   width: 56px;
   height: 56px;
