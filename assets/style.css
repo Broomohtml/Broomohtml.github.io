@@ -175,7 +175,7 @@ body {
   box-shadow: 0 -20px 40px rgba(13, 13, 20, 0.4);
   display: flex;
   align-items: flex-end;
-  padding: 10px 32px calc(16px + env(safe-area-inset-bottom));
+  padding: 10px 32px max(28px, env(safe-area-inset-bottom, 28px));
   z-index: 200;
 }
 
@@ -1082,6 +1082,14 @@ body {
 }
 
 .profile-field-input::placeholder { color: var(--text-muted); }
+
+.app-version-label {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 24px 0 8px;
+  letter-spacing: 0.06em;
+}
 
 /* ── SETTINGS ── */
 .settings-block { margin: 0 20px 0; }
