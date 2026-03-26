@@ -236,7 +236,8 @@ body {
 /* ── FAB ── */
 .fab {
   position: fixed;
-  bottom: 112px;
+  bottom: 100px;
+  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
   right: 24px;
   width: 56px;
   height: 56px;
