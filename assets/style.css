@@ -57,7 +57,7 @@ body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100dvh;
+  height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -143,7 +143,7 @@ body {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: 16px;
 }
 
 /* ── VIEWS ── */
@@ -167,12 +167,9 @@ body {
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
-  max-width: 398px;
-  margin: 0 auto;
+  flex-shrink: 0;
+  margin: 0 16px;
+  margin-bottom: max(16px, env(safe-area-inset-bottom, 16px));
   background: rgba(26, 26, 46, 0.88);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
