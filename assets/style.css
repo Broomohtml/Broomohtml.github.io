@@ -332,7 +332,7 @@ body {
   -webkit-backdrop-filter: blur(24px);
   border-radius: 28px;
   border: 1px solid rgba(255,255,255,0.08);
-  padding: 6px 0;
+  padding: 6px 0 max(6px, env(safe-area-inset-bottom, 6px));
 }
 
 .nav-item {
