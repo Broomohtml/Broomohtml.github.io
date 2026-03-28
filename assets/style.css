@@ -38,6 +38,7 @@
 html {
   background: var(--bg);
   height: 100%;
+  overscroll-behavior: none;
 }
 
 body {
@@ -47,6 +48,8 @@ body {
   height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: clip;
+  overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
