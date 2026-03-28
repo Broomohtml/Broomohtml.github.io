@@ -36,18 +36,17 @@
 }
 
 html {
-  background: #5A0000;
+  background: var(--bg);
   height: 100%;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #5A0000;
+  background: var(--bg);
   color: var(--text-1);
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -322,7 +321,7 @@ body {
    ────────────────────────────────────────── */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
+  bottom: max(8px, env(safe-area-inset-bottom, 8px));
   left: 16px;
   right: 16px;
   z-index: 100;
