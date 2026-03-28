@@ -288,6 +288,7 @@ body {
   border-top: 1px solid rgba(255,255,255,0.08);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
   padding-bottom: 90px;
 }
 
