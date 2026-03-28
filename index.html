@@ -51,7 +51,7 @@
       <div class="home-amount-sep"></div>
       <div class="home-amount-block home-amount-block--right">
         <span class="home-amount-label">Versione</span>
-        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.0.9</span>
+        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.0</span>
       </div>
       <span id="summaryLibero" style="display:none"></span>
     </div>
@@ -130,6 +130,15 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
+  // Altezza reale viewport (fix iOS PWA dvh instabile al lancio)
+  function setAppHeight() {
+    const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  setAppHeight();
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
+  else window.addEventListener('resize', setAppHeight);
+
   // Blocca scroll pagina, permette solo scroll dentro .home-list-sheet
   document.addEventListener('touchmove', function(e) {
     if (!e.target.closest('.home-list-sheet')) e.preventDefault();
