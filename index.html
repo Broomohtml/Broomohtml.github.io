@@ -51,7 +51,7 @@
       <div class="home-amount-sep"></div>
       <div class="home-amount-block home-amount-block--right">
         <span class="home-amount-label">Versione</span>
-        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.2</span>
+        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.3</span>
       </div>
       <span id="summaryLibero" style="display:none"></span>
     </div>
@@ -136,6 +136,14 @@
     document.documentElement.style.setProperty('--app-height', h + 'px');
   }
   setAppHeight();
+  // iOS assesta il viewport dopo il carico: retry multipli
+  window.addEventListener('load', () => {
+    setAppHeight();
+    setTimeout(setAppHeight, 100);
+    setTimeout(setAppHeight, 500);
+  });
+  // Aggiorna al primo touch (iOS finalizza il layout al primo gesto)
+  document.addEventListener('touchstart', setAppHeight, { once: true });
   if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
   else window.addEventListener('resize', setAppHeight);
 
