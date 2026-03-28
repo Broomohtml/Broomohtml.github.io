@@ -220,6 +220,7 @@ body {
   border-top: 1px solid rgba(255,255,255,0.08);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  padding-bottom: 90px;
 }
 
 .home-list-header {
@@ -320,19 +321,20 @@ body {
    BOTTOM NAV — floating pill
    ────────────────────────────────────────── */
 .bottom-nav {
-  position: relative;
-  z-index: 10;
-  flex-shrink: 0;
+  position: fixed;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 8px 16px 0;
   background: rgba(18,18,30,0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-radius: 28px;
   border: 1px solid rgba(255,255,255,0.08);
-  padding: 6px 0 max(6px, env(safe-area-inset-bottom, 6px));
+  padding: 6px 0;
 }
 
 .nav-item {
