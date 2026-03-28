@@ -36,13 +36,13 @@
 }
 
 html {
-  background: var(--bg);
+  background: #5A0000;
   height: 100%;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--bg);
+  background: #5A0000;
   color: var(--text-1);
   height: 100dvh;
   display: flex;
