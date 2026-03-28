@@ -25,7 +25,7 @@
   </div>
   <span class="splash-name">Finance</span>
   <span class="splash-hint">Scorri verso il basso per aprire</span>
-  <span class="splash-version">v4.2.2</span>
+  <span class="splash-version">v4.2.3</span>
 </div>
 
 <!-- Gradient background -->
@@ -145,8 +145,14 @@
     document.documentElement.style.setProperty('--app-height', h + 'px');
   }
   setAppHeight();
-  if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
-  else window.addEventListener('resize', setAppHeight);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      setAppHeight();
+      setTimeout(setAppHeight, 300); // retry dopo animazione chiusura tastiera iOS
+    });
+  } else {
+    window.addEventListener('resize', setAppHeight);
+  }
 
   // Splash: swipe down per aprire (fix BUG-01 — iOS assesta viewport solo al primo tocco fisico)
   const splash = document.getElementById('splashScreen');
