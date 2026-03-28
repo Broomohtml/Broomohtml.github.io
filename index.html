@@ -20,10 +20,11 @@
 
 <!-- SPLASH SCREEN -->
 <div id="splashScreen">
-  <div class="splash-icon-wrap">
+  <div class="splash-icon-wrap" id="splashIcon">
     <span class="material-symbols-outlined">account_balance_wallet</span>
   </div>
   <span class="splash-name">Finance</span>
+  <span class="splash-hint">Tocca per aprire</span>
 </div>
 
 <!-- Gradient background -->
@@ -59,7 +60,7 @@
       <div class="home-amount-sep"></div>
       <div class="home-amount-block home-amount-block--right">
         <span class="home-amount-label">Versione</span>
-        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.7</span>
+        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.8</span>
       </div>
       <span id="summaryLibero" style="display:none"></span>
     </div>
@@ -147,17 +148,22 @@
   if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
   else window.addEventListener('resize', setAppHeight);
 
-  // Splash: aspetta 650ms, simula touch per triggerare ricalcolo viewport iOS, poi mostra l'app
-  setTimeout(() => {
-    try {
-      document.dispatchEvent(new TouchEvent('touchstart', { bubbles: true, cancelable: true }));
-      document.dispatchEvent(new TouchEvent('touchend',   { bubbles: true, cancelable: true }));
-    } catch(e) {}
+  // Splash: aspetta tap utente (fix BUG-01 — iOS assesta viewport solo al primo tocco fisico)
+  const splash = document.getElementById('splashScreen');
+  const splashIcon = document.getElementById('splashIcon');
+  let dismissed = false;
+  function dismissSplash() {
+    if (dismissed) return;
+    dismissed = true;
     setAppHeight();
-    const splash = document.getElementById('splashScreen');
-    splash.classList.add('splash-hide');
-    setTimeout(() => splash.remove(), 400);
-  }, 650);
+    splashIcon.classList.add('splash-pulse');
+    setTimeout(() => {
+      splash.classList.add('splash-hide');
+      setTimeout(() => splash.remove(), 400);
+    }, 320);
+  }
+  splash.addEventListener('touchstart', dismissSplash, { once: true });
+  splash.addEventListener('click', dismissSplash, { once: true });
 
 </script>
 </body>
