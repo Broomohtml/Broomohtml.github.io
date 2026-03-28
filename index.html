@@ -59,7 +59,7 @@
       <div class="home-amount-sep"></div>
       <div class="home-amount-block home-amount-block--right">
         <span class="home-amount-label">Versione</span>
-        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.6</span>
+        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.7</span>
       </div>
       <span id="summaryLibero" style="display:none"></span>
     </div>
@@ -147,8 +147,12 @@
   if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
   else window.addEventListener('resize', setAppHeight);
 
-  // Splash: aspetta 650ms (iOS assesta il viewport), poi setta l'altezza e mostra l'app
+  // Splash: aspetta 650ms, simula touch per triggerare ricalcolo viewport iOS, poi mostra l'app
   setTimeout(() => {
+    try {
+      document.dispatchEvent(new TouchEvent('touchstart', { bubbles: true, cancelable: true }));
+      document.dispatchEvent(new TouchEvent('touchend',   { bubbles: true, cancelable: true }));
+    } catch(e) {}
     setAppHeight();
     const splash = document.getElementById('splashScreen');
     splash.classList.add('splash-hide');
