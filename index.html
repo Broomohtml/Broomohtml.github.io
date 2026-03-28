@@ -18,6 +18,14 @@
 </head>
 <body data-page="home">
 
+<!-- SPLASH SCREEN -->
+<div id="splashScreen">
+  <div class="splash-icon-wrap">
+    <span class="material-symbols-outlined">account_balance_wallet</span>
+  </div>
+  <span class="splash-name">Finance</span>
+</div>
+
 <!-- Gradient background -->
 <div class="home-bg" aria-hidden="true"></div>
 
@@ -51,7 +59,7 @@
       <div class="home-amount-sep"></div>
       <div class="home-amount-block home-amount-block--right">
         <span class="home-amount-label">Versione</span>
-        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.5</span>
+        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.6</span>
       </div>
       <span id="summaryLibero" style="display:none"></span>
     </div>
@@ -136,16 +144,16 @@
     document.documentElement.style.setProperty('--app-height', h + 'px');
   }
   setAppHeight();
-  // iOS assesta il viewport dopo il carico: retry multipli
-  window.addEventListener('load', () => {
-    setAppHeight();
-    setTimeout(setAppHeight, 100);
-    setTimeout(setAppHeight, 500);
-  });
-  // Aggiorna al primo touch (iOS finalizza il layout al primo gesto)
-  document.addEventListener('touchstart', setAppHeight, { once: true });
   if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
   else window.addEventListener('resize', setAppHeight);
+
+  // Splash: aspetta 650ms (iOS assesta il viewport), poi setta l'altezza e mostra l'app
+  setTimeout(() => {
+    setAppHeight();
+    const splash = document.getElementById('splashScreen');
+    splash.classList.add('splash-hide');
+    setTimeout(() => splash.remove(), 400);
+  }, 650);
 
 </script>
 </body>

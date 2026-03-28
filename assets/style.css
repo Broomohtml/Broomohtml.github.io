@@ -52,6 +52,48 @@ body {
 }
 
 /* ──────────────────────────────────────────
+   SPLASH SCREEN
+   ────────────────────────────────────────── */
+#splashScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  transition: opacity 0.35s ease;
+}
+#splashScreen.splash-hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash-icon-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 40px rgba(123,47,255,0.45);
+}
+.splash-icon-wrap .material-symbols-outlined {
+  font-size: 36px;
+  color: #fff;
+  font-variation-settings: 'FILL' 1;
+}
+.splash-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+
+/* ──────────────────────────────────────────
    HOME BACKGROUND — violet + green gradient
    ────────────────────────────────────────── */
 .home-bg {
