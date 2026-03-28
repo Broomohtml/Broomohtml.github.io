@@ -24,7 +24,7 @@
     <span class="material-symbols-outlined">account_balance_wallet</span>
   </div>
   <span class="splash-name">Finance</span>
-  <span class="splash-hint">Tocca per aprire</span>
+  <span class="splash-hint">Scorri verso il basso per aprire</span>
 </div>
 
 <!-- Gradient background -->
@@ -60,7 +60,7 @@
       <div class="home-amount-sep"></div>
       <div class="home-amount-block home-amount-block--right">
         <span class="home-amount-label">Versione</span>
-        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.8</span>
+        <span class="home-amount-value" style="font-size:20px;letter-spacing:0.01em">v4.1.9</span>
       </div>
       <span id="summaryLibero" style="display:none"></span>
     </div>
@@ -148,10 +148,12 @@
   if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
   else window.addEventListener('resize', setAppHeight);
 
-  // Splash: aspetta tap utente (fix BUG-01 — iOS assesta viewport solo al primo tocco fisico)
+  // Splash: swipe down per aprire (fix BUG-01 — iOS assesta viewport solo al primo tocco fisico)
   const splash = document.getElementById('splashScreen');
   const splashIcon = document.getElementById('splashIcon');
   let dismissed = false;
+  let touchStartY = 0;
+
   function dismissSplash() {
     if (dismissed) return;
     dismissed = true;
@@ -162,8 +164,15 @@
       setTimeout(() => splash.remove(), 400);
     }, 320);
   }
-  splash.addEventListener('touchstart', dismissSplash, { once: true });
-  splash.addEventListener('click', dismissSplash, { once: true });
+
+  splash.addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  splash.addEventListener('touchend', e => {
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (dy > 40) dismissSplash();
+  }, { passive: true });
 
 </script>
 </body>
