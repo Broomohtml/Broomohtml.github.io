@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Finance" />
-  <meta name="theme-color" content="#0D0D14" />
+  <meta name="theme-color" content="#0B0B15" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <title>Finance</title>
@@ -15,55 +15,62 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/style.css" />
-  <link rel="prefetch" href="pages/entrate.html" />
-  <link rel="prefetch" href="pages/pockets.html" />
-  <link rel="prefetch" href="pages/dashboard.html" />
-  <link rel="prefetch" href="pages/partner.html" />
-  <link rel="prefetch" href="pages/profile.html" />
-  <link rel="prefetch" href="pages/settings.html" />
 </head>
 <body data-page="home">
 
+<!-- Gradient background -->
+<div class="home-bg" aria-hidden="true"></div>
+
+<!-- HEADER -->
 <header class="app-header">
-  <button class="icon-btn" onclick="openHamburger()">
-    <span class="material-symbols-outlined">menu</span>
-  </button>
-  <span class="app-name">Finance</span>
   <div class="header-avatar" id="headerAvatar" onclick="goTo('profile')">B</div>
+  <div class="header-search">
+    <span class="material-symbols-outlined">search</span>
+    <input type="text" placeholder="Cerca pocket, entrate…" readonly />
+  </div>
+  <div class="header-actions">
+    <button class="header-icon-btn" onclick="goTo('dashboard')" aria-label="Dashboard">
+      <span class="material-symbols-outlined">bar_chart</span>
+    </button>
+    <button class="header-icon-btn" onclick="goTo('partner')" aria-label="Partner">
+      <span class="material-symbols-outlined">group</span>
+    </button>
+  </div>
 </header>
 
+<!-- MAIN -->
 <main class="main-content">
-  <section class="summary-card" onclick="goTo('dashboard')">
-    <div class="summary-card-top">
-      <span class="summary-card-label-sm">Dashboard ↗</span>
-      <span class="material-symbols-outlined summary-card-more">more_horiz</span>
-    </div>
-    <div class="summary-row">
-      <div class="summary-mini">
-        <p class="summary-mini-label">Allocato</p>
-        <p class="summary-mini-amount" id="summaryAllocato">€0</p>
+
+  <!-- Amounts hero -->
+  <section class="home-hero">
+    <div class="home-amounts-row">
+      <div class="home-amount-block">
+        <span class="home-amount-label">Allocato</span>
+        <span class="home-amount-value" id="summaryAllocato">€0</span>
       </div>
-      <div class="summary-sep"></div>
-      <div class="summary-mini summary-mini--right">
-        <p class="summary-mini-label">Libero</p>
-        <p class="summary-mini-amount" id="summaryLibero">€0</p>
+      <div class="home-amount-sep"></div>
+      <div class="home-amount-block home-amount-block--right">
+        <span class="home-amount-label">Libero</span>
+        <span class="home-amount-value" id="summaryLibero">€0</span>
       </div>
     </div>
-    <div class="summary-bar-bg">
-      <div class="summary-bar-fill" id="summaryBarFill" style="width:0%"></div>
-    </div>
-    <div style="margin-top:6px">
-      <span class="summary-bar-label" id="summaryBarLabel">0% del reddito allocato</span>
-    </div>
+    <!-- hidden JS compat elements -->
+    <div id="summaryBarFill" style="display:none"></div>
+    <span id="summaryBarLabel" style="display:none"></span>
   </section>
 
-  <div class="section-row">
-    <h2 class="section-title">I tuoi pocket</h2>
-    <button class="section-btn" onclick="goTo('pockets')">Gestisci →</button>
+  <!-- Pocket list sheet -->
+  <div class="home-list-sheet">
+    <div class="home-list-header">
+      <span class="home-list-title">I tuoi pocket</span>
+      <button class="home-list-action" onclick="goTo('pockets')">Gestisci →</button>
+    </div>
+    <div id="homePocketsList"></div>
   </div>
-  <div class="pocket-list" id="homePocketsList"></div>
+
 </main>
 
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-item" onclick="goTo('entrate')">
     <span class="material-symbols-outlined nav-icon">payments</span>
@@ -114,49 +121,6 @@
     </div>
     <button class="submit-btn" onclick="savePocket()">Salva pocket</button>
     <button class="delete-btn" id="pocketDeleteBtn" onclick="deletePocketFromModal()" style="display:none">Elimina pocket</button>
-  </div>
-</div>
-
-<!-- HAMBURGER MENU -->
-<div class="modal-overlay" id="hamburgerMenu">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-header">
-      <span class="modal-title">Menu</span>
-      <button class="modal-close-x" onclick="closeHamburger()">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-    <div class="hamburger-items">
-      <button class="hamburger-item" onclick="hamburgerGo('profile')">
-        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
-          <span class="material-symbols-outlined">person</span>
-        </div>
-        <span class="hamburger-item-label">Profilo</span>
-        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
-      </button>
-      <button class="hamburger-item" onclick="hamburgerGo('dashboard')">
-        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
-          <span class="material-symbols-outlined">bar_chart</span>
-        </div>
-        <span class="hamburger-item-label">Dashboard</span>
-        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
-      </button>
-      <button class="hamburger-item" onclick="hamburgerGo('partner')">
-        <div class="hamburger-item-icon" style="background:rgba(236,72,153,0.13);color:#EC4899">
-          <span class="material-symbols-outlined">group</span>
-        </div>
-        <span class="hamburger-item-label">Partner</span>
-        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
-      </button>
-      <button class="hamburger-item" onclick="hamburgerGo('settings')">
-        <div class="hamburger-item-icon" style="background:rgba(124,58,237,0.13);color:#A78BFA">
-          <span class="material-symbols-outlined">settings</span>
-        </div>
-        <span class="hamburger-item-label">Impostazioni</span>
-        <span class="material-symbols-outlined hamburger-chevron">chevron_right</span>
-      </button>
-    </div>
   </div>
 </div>
 
