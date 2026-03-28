@@ -12,7 +12,7 @@
   <title>Finance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/style.css" />
   <link rel="prefetch" href="pages/entrate.html" />
@@ -52,16 +52,14 @@
     <div class="summary-bar-bg">
       <div class="summary-bar-fill" id="summaryBarFill" style="width:0%"></div>
     </div>
-    <div class="summary-bar-footer">
+    <div style="margin-top:6px">
       <span class="summary-bar-label" id="summaryBarLabel">0% del reddito allocato</span>
     </div>
   </section>
 
-  <div class="section-header section-header--home">
-    <h2 class="section-heading">I tuoi pocket</h2>
-    <a class="section-link" onclick="goTo('pockets')">
-      Gestisci <span class="material-symbols-outlined section-link-icon">arrow_forward</span>
-    </a>
+  <div class="section-row">
+    <h2 class="section-title">I tuoi pocket</h2>
+    <button class="section-btn" onclick="goTo('pockets')">Gestisci →</button>
   </div>
   <div class="pocket-list" id="homePocketsList"></div>
 </main>
@@ -71,7 +69,7 @@
     <span class="material-symbols-outlined nav-icon">payments</span>
     <span class="nav-label">Entrate</span>
   </button>
-  <button class="nav-item active nav-item--center">
+  <button class="nav-item active" onclick="goTo('home')">
     <span class="material-symbols-outlined nav-icon">home</span>
     <span class="nav-label">Home</span>
   </button>
