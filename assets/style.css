@@ -326,14 +326,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 8px 16px 0;
+  margin: 8px 16px 10px;
   background: rgba(18,18,30,0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-radius: 28px 28px 0 0;
+  border-radius: 28px;
   border: 1px solid rgba(255,255,255,0.08);
-  border-bottom: none;
-  padding: 6px 0 max(10px, env(safe-area-inset-bottom, 10px));
+  padding: 6px 0;
 }
 
 .nav-item {
