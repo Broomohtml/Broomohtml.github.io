@@ -26,15 +26,19 @@
 - Il gesto di swipe è un tocco fisico reale → iOS assesta il viewport
 - `setAppHeight()` viene chiamata subito dopo lo swipe → `--app-height` corretto
 - L'utente non vede mai il layout "rotto"
-- `touchmove` sulla splash ha `preventDefault()` per evitare che il body rubber-bandi durante lo swipe
+- Il gesto di swipe non ha `preventDefault()` sul touchmove — necessario per il funzionamento del fix viewport iOS (bloccarlo impedisce l'assestamento)
 
 **Nota tecnica**: la causa non era il *tempo* ma la *mancanza di interazione fisica*. iOS trattiene il ricalcolo del viewport finché l'utente non tocca realmente lo schermo — nessun approccio programmatico può sostituirlo.
 
 ---
 
-## BUG-02 — [template per futuri bug]
+## BUG-02 — Navbar in alto dopo chiusura tastiera iOS
 
-**Stato**:
-**Sintomo**:
-**Causa root**:
-**Workaround attuale**:
+**Stato**: risolto (v4.2.3)
+
+**Sintomo**: aprendo un pocket e toccando un campo testo, la tastiera si apre e sposta il layout su. Chiudendo il modal (salva/chiudi/elimina), la navbar rimane in posizione alta invece di tornare in basso.
+
+**Causa root**: quando la tastiera iOS si apre, `visualViewport.resize` spara con un valore ridotto (altezza viewport − tastiera). `setAppHeight()` salva questo valore piccolo in `--app-height`. Quando la tastiera si chiude, l'evento `resize` può non sparare nel momento giusto (durante l'animazione di chiusura), lasciando `--app-height` al valore "tastiera aperta".
+
+**Soluzione (v4.2.3)**:
+Retry di `setAppHeight()` dopo 300ms ad ogni `visualViewport.resize` — cattura il valore finale dopo l'animazione di chiusura tastiera (durata ~250ms su iOS).

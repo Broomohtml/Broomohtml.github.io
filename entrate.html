@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Finance" />
+  <meta name="theme-color" content="#0B0B15" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>Finance — Entrate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body data-page="entrate">
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-avatar" onclick="goTo('profile')">B</div>
+  <div class="header-search">
+    <span class="material-symbols-outlined">search</span>
+    <input type="text" placeholder="Cerca entrate…" readonly />
+  </div>
+  <div class="header-actions">
+    <button class="header-icon-btn" onclick="goTo('dashboard')" aria-label="Dashboard">
+      <span class="material-symbols-outlined">bar_chart</span>
+    </button>
+    <button class="header-icon-btn" onclick="openEntrataModal(null)" aria-label="Aggiungi entrata">
+      <span class="material-symbols-outlined">add</span>
+    </button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <!-- Hero totale entrate -->
+  <section class="page-hero">
+    <div class="page-hero-label">Entrate mensili</div>
+    <div class="page-hero-value">€<span id="entrateTotalNum">0</span></div>
+    <div class="page-hero-sub" id="entrateCount"></div>
+  </section>
+
+  <!-- Lista entrate -->
+  <div class="page-list-sheet">
+    <div id="entrateList"></div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="goTo('entrate')">
+    <span class="material-symbols-outlined nav-icon">payments</span>
+    <span class="nav-label">Entrate</span>
+  </button>
+  <button class="nav-item" onclick="goTo('home')">
+    <span class="material-symbols-outlined nav-icon">home</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" onclick="goTo('pockets')">
+    <span class="material-symbols-outlined nav-icon">grid_view</span>
+    <span class="nav-label">Pocket</span>
+  </button>
+</nav>
+
+<!-- ENTRATA MODAL -->
+<div class="modal-overlay" id="entrataModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title" id="entrataModalTitle">Nuova entrata</span>
+      <button class="modal-close-x" onclick="closeEntrataModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="pocket-preview">
+      <div class="pocket-preview-icon" id="entrataPreviewIcon">💼</div>
+      <div>
+        <p class="pocket-preview-name" id="entrataPreviewName">Entrata</p>
+        <p class="pocket-preview-amount" id="entrataPreviewAmount">€0 / mese</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <input type="text" class="form-input emoji-input" id="entrataEmoji" placeholder="💼" maxlength="2" oninput="updateEntrataPreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Causale</label>
+      <input type="text" class="form-input" id="entrataName" placeholder="es. Stipendio" oninput="updateEntrataPreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Importo mensile (€)</label>
+      <input type="number" class="form-input" id="entrataAmount" placeholder="2000" min="0" step="1" inputmode="numeric" oninput="updateEntrataPreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Colore</label>
+      <div class="color-swatches" id="entrataColorSwatches"></div>
+    </div>
+    <button class="submit-btn" onclick="saveEntrata()">Salva entrata</button>
+    <button class="delete-btn" id="entrataDeleteBtn" onclick="deleteEntrataFromModal()" style="display:none">Elimina entrata</button>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  function setAppHeight() {
+    const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  setAppHeight();
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      setAppHeight();
+      setTimeout(setAppHeight, 300);
+    });
+  } else {
+    window.addEventListener('resize', setAppHeight);
+  }
+</script>
+</body>
+</html>

@@ -1,7 +1,8 @@
-const CACHE = 'finance-v56';
+const CACHE = 'finance-v57';
 const ASSETS = [
   '/',
   '/index.html',
+  '/entrate.html',
   '/assets/style.css',
   '/assets/app.js',
   '/manifest.json',
