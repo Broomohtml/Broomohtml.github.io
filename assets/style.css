@@ -815,6 +815,35 @@ body {
 }
 
 /* ──────────────────────────────────────────
+   ADD CARD — fondo lista
+   ────────────────────────────────────────── */
+.add-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 20px;
+  margin: 8px 16px 4px;
+  border: 1.5px dashed rgba(255,255,255,0.1);
+  border-radius: var(--r-lg);
+  color: var(--text-3);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  width: calc(100% - 32px);
+  transition: border-color 0.15s, color 0.15s;
+}
+.add-card:active {
+  border-color: var(--violet-3);
+  color: var(--violet-3);
+}
+.add-card .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* ──────────────────────────────────────────
    EMPTY STATE
    ────────────────────────────────────────── */
 .empty-state {
