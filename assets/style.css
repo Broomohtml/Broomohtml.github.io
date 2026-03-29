@@ -319,8 +319,8 @@ body {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: none;
   padding-bottom: 90px;
-  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 140px), transparent calc(100% - 65px));
-  mask-image: linear-gradient(to bottom, black calc(100% - 140px), transparent calc(100% - 65px));
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 200px), transparent calc(100% - 65px));
+  mask-image: linear-gradient(to bottom, black calc(100% - 200px), transparent calc(100% - 65px));
 }
 
 /* ──────────────────────────────────────────
@@ -337,8 +337,8 @@ body {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: none;
   padding-bottom: 90px;
-  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 140px), transparent calc(100% - 65px));
-  mask-image: linear-gradient(to bottom, black calc(100% - 140px), transparent calc(100% - 65px));
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 200px), transparent calc(100% - 65px));
+  mask-image: linear-gradient(to bottom, black calc(100% - 200px), transparent calc(100% - 65px));
 }
 
 .home-list-header {

@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.3.1';
+const APP_VERSION = 'v4.4.3.2';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
@@ -8,15 +8,25 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'affitto',   name: 'v4.4.3.1',     emoji: '🏠', amount: 400, color: '#7C3AED', active: true },
-  { id: 'emergenze', name: 'Emergenze',    emoji: '🚨', amount: 250, color: '#EF4444', active: true },
-  { id: 'spesa',     name: 'Spesa & Casa', emoji: '🛒', amount: 450, color: '#10B981', active: true },
-  { id: 'gaming',    name: 'Gaming',       emoji: '🎮', amount: 150, color: '#F59E0B', active: true },
-  { id: 'rossana',   name: 'Rossana',      emoji: '💜', amount: 150, color: '#EC4899', active: true },
+  { id: 'p1', name: 'Pocket 1', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
+  { id: 'p2', name: 'Pocket 2', emoji: '💳', amount: 100, color: '#A78BFA', active: true },
+  { id: 'p3', name: 'Pocket 3', emoji: '💳', amount: 200, color: '#3B82F6', active: true },
+  { id: 'p4', name: 'Pocket 4', emoji: '💳', amount: 300, color: '#10B981', active: true },
+  { id: 'p5', name: 'Pocket 5', emoji: '💳', amount: 400, color: '#F59E0B', active: true },
+  { id: 'p6', name: 'Pocket 6', emoji: '💳', amount: 500, color: '#EF4444', active: true },
+  { id: 'p7', name: 'Pocket 7', emoji: '💳', amount: 600, color: '#EC4899', active: true },
+  { id: 'p8', name: 'Pocket 8', emoji: '💳', amount: 700, color: '#06B6D4', active: true },
 ];
 
 const DEFAULT_ENTRATE = [
-  { id: 'stipendio', name: 'Stipendio', emoji: '💼', amount: 1800, color: '#7C3AED' },
+  { id: 'e1', name: 'Entrata 1', emoji: '💼', amount: 100, color: '#7C3AED' },
+  { id: 'e2', name: 'Entrata 2', emoji: '💼', amount: 200, color: '#A78BFA' },
+  { id: 'e3', name: 'Entrata 3', emoji: '💼', amount: 300, color: '#3B82F6' },
+  { id: 'e4', name: 'Entrata 4', emoji: '💼', amount: 400, color: '#10B981' },
+  { id: 'e5', name: 'Entrata 5', emoji: '💼', amount: 500, color: '#F59E0B' },
+  { id: 'e6', name: 'Entrata 6', emoji: '💼', amount: 600, color: '#EF4444' },
+  { id: 'e7', name: 'Entrata 7', emoji: '💼', amount: 700, color: '#EC4899' },
+  { id: 'e8', name: 'Entrata 8', emoji: '💼', amount: 800, color: '#06B6D4' },
 ];
 
 // ── STATE ──
