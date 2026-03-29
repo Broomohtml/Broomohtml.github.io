@@ -25,7 +25,7 @@
   </div>
   <span class="splash-name">Finance</span>
   <span class="splash-hint">Scorri verso il basso per aprire</span>
-  <span class="splash-version">v4.2.3</span>
+  <span class="splash-version">v4.2.5</span>
 </div>
 
 <!-- Gradient background -->
@@ -139,19 +139,17 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
-  // Altezza reale viewport (fix iOS PWA dvh instabile al lancio)
-  function setAppHeight() {
-    const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    document.documentElement.style.setProperty('--app-height', h + 'px');
-  }
-  setAppHeight();
+  // Forza scroll a 0 e ricalcola altezza (fix iOS PWA gap al lancio)
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  });
+  // Retry setAppHeight dopo chiusura tastiera iOS
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
-      setAppHeight();
-      setTimeout(setAppHeight, 300); // retry dopo animazione chiusura tastiera iOS
+      setTimeout(() => window.scrollTo(0, 0), 300);
     });
-  } else {
-    window.addEventListener('resize', setAppHeight);
   }
 
   // Splash: swipe down per aprire (fix BUG-01 — iOS assesta viewport solo al primo tocco fisico)
