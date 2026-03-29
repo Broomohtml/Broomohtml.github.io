@@ -110,10 +110,16 @@ function renderSummary() {
 function renderEntrate() {
   const container = document.getElementById('entrateList');
   if (!container) return;
-  const count     = document.getElementById('entrateCount');
-  const totalEl   = document.getElementById('entrateTotalNum');
+  const count   = document.getElementById('entrateCount');
+  const totalEl = document.getElementById('entrateTotalNum');
 
   if (totalEl) totalEl.textContent = fmtNum(totalEntrate());
+
+  const searchEl = document.getElementById('entrateSearch');
+  const query    = searchEl ? searchEl.value.toLowerCase().trim() : '';
+  const list     = query
+    ? state.entrate.filter(e => e.name.toLowerCase().includes(query))
+    : state.entrate;
 
   if (state.entrate.length === 0) {
     if (count) count.textContent = '';
@@ -128,7 +134,17 @@ function renderEntrate() {
 
   if (count) count.textContent = state.entrate.length + (state.entrate.length === 1 ? ' entrata' : ' entrate');
 
-  container.innerHTML = state.entrate.map(e => `
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <div class="empty-state-text">Nessun risultato</div>
+        <div class="empty-state-sub">Prova con un termine diverso</div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(e => `
     <div class="pocket-card" onclick="openEntrataModal('${e.id}')">
       <div class="pocket-icon pocket-icon--sm" style="background:${e.color}20;color:${e.color}">${e.emoji}</div>
       <div class="pocket-card-info">
