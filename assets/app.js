@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.3.3';
+const APP_VERSION = 'v4.4.3.4';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
@@ -8,14 +8,14 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'p1', name: 'Pocket 1', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
-  { id: 'p2', name: 'Pocket 2', emoji: '💳', amount: 100, color: '#A78BFA', active: true },
-  { id: 'p3', name: 'Pocket 3', emoji: '💳', amount: 200, color: '#3B82F6', active: true },
-  { id: 'p4', name: 'Pocket 4', emoji: '💳', amount: 300, color: '#10B981', active: true },
-  { id: 'p5', name: 'Pocket 5', emoji: '💳', amount: 400, color: '#F59E0B', active: true },
-  { id: 'p6', name: 'Pocket 6', emoji: '💳', amount: 500, color: '#EF4444', active: true },
-  { id: 'p7', name: 'Pocket 7', emoji: '💳', amount: 600, color: '#EC4899', active: true },
-  { id: 'p8', name: 'Pocket 8', emoji: '💳', amount: 700, color: '#06B6D4', active: true },
+  { id: 'p1', name: 'Pocket v4.4.3.4', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
+  { id: 'p2', name: 'Pocket 2',        emoji: '💳', amount: 100, color: '#A78BFA', active: true },
+  { id: 'p3', name: 'Pocket 3',        emoji: '💳', amount: 200, color: '#3B82F6', active: true },
+  { id: 'p4', name: 'Pocket 4',        emoji: '💳', amount: 300, color: '#10B981', active: true },
+  { id: 'p5', name: 'Pocket 5',        emoji: '💳', amount: 400, color: '#F59E0B', active: true },
+  { id: 'p6', name: 'Pocket 6',        emoji: '💳', amount: 500, color: '#EF4444', active: true },
+  { id: 'p7', name: 'Pocket 7',        emoji: '💳', amount: 600, color: '#EC4899', active: true },
+  { id: 'p8', name: 'Pocket 8',        emoji: '💳', amount: 700, color: '#06B6D4', active: true },
 ];
 
 const DEFAULT_ENTRATE = [
@@ -159,7 +159,7 @@ function renderEntrate() {
       <div class="pocket-icon pocket-icon--sm" style="background:${e.color}20;color:${e.color}">${e.emoji}</div>
       <div class="pocket-card-info">
         <div class="pocket-card-name">${e.name}</div>
-        <div class="pocket-card-sub">Entrata mensile</div>
+        <div class="pocket-card-sub">${e.description || 'Entrata mensile'}</div>
       </div>
       <span class="pocket-card-amount--inline">${fmtInt(e.amount)}</span>
       <span class="material-symbols-outlined pocket-card-chevron">chevron_right</span>
@@ -233,7 +233,7 @@ function renderHomePockets() {
       <div class="pocket-icon pocket-icon--sm" style="background:${p.color}20;color:${p.color}">${p.emoji}</div>
       <div class="pocket-card-info">
         <div class="pocket-card-name">${p.name}</div>
-        <div class="pocket-card-sub">Budget mensile</div>
+        <div class="pocket-card-sub">${p.description || 'Budget mensile'}</div>
       </div>
       <span class="pocket-card-amount--inline">${fmtInt(p.amount)}</span>
       <span class="material-symbols-outlined pocket-card-chevron">chevron_right</span>
@@ -600,11 +600,12 @@ function openPocketModal(id) {
   editingPocketId = id;
   const p = id ? state.pockets.find(x => x.id === id) : null;
 
-  document.getElementById('pocketModalTitle').textContent  = id ? 'Modifica pocket' : 'Nuovo pocket';
-  document.getElementById('pocketEmoji').value             = p ? p.emoji  : '';
-  document.getElementById('pocketName').value              = p ? p.name   : '';
-  document.getElementById('pocketAmount').value            = p ? p.amount : '';
-  document.getElementById('pocketDeleteBtn').style.display = id ? 'block' : 'none';
+  document.getElementById('pocketModalTitle').textContent      = id ? 'Modifica pocket' : 'Nuovo pocket';
+  document.getElementById('pocketEmoji').value                 = p ? p.emoji       : '';
+  document.getElementById('pocketName').value                  = p ? p.name        : '';
+  document.getElementById('pocketAmount').value                = p ? p.amount      : '';
+  document.getElementById('pocketDescription').value          = p ? (p.description || '') : '';
+  document.getElementById('pocketDeleteBtn').style.display     = id ? 'block' : 'none';
 
   selectedPocketColor = p ? p.color : POCKET_COLORS[0];
   renderColorSwatches('pocketColorSwatches', selectedPocketColor, 'selectPocketColor');
@@ -635,16 +636,17 @@ function updatePocketPreview() {
 }
 
 function savePocket() {
-  const emoji  = document.getElementById('pocketEmoji').value.trim() || '💳';
-  const name   = document.getElementById('pocketName').value.trim();
-  const amount = parseInt(document.getElementById('pocketAmount').value) || 0;
+  const emoji       = document.getElementById('pocketEmoji').value.trim() || '💳';
+  const name        = document.getElementById('pocketName').value.trim();
+  const amount      = parseInt(document.getElementById('pocketAmount').value) || 0;
+  const description = document.getElementById('pocketDescription').value.trim().slice(0, 25);
   if (!name) { alert('Inserisci un nome per il pocket'); return; }
 
   if (editingPocketId) {
     const p = state.pockets.find(x => x.id === editingPocketId);
-    if (p) { p.emoji = emoji; p.name = name; p.amount = amount; p.color = selectedPocketColor; }
+    if (p) { p.emoji = emoji; p.name = name; p.amount = amount; p.color = selectedPocketColor; p.description = description; }
   } else {
-    state.pockets.push({ id: generateId(), emoji, name, amount, color: selectedPocketColor, active: true });
+    state.pockets.push({ id: generateId(), emoji, name, amount, color: selectedPocketColor, active: true, description });
   }
   saveState();
   closePocketModal();
@@ -666,11 +668,12 @@ function openEntrataModal(id) {
   editingEntrataId = id;
   const e = id ? state.entrate.find(x => x.id === id) : null;
 
-  document.getElementById('entrataModalTitle').textContent  = id ? 'Modifica entrata' : 'Nuova entrata';
-  document.getElementById('entrataEmoji').value             = e ? e.emoji  : '';
-  document.getElementById('entrataName').value              = e ? e.name   : '';
-  document.getElementById('entrataAmount').value            = e ? e.amount : '';
-  document.getElementById('entrataDeleteBtn').style.display = id ? 'block' : 'none';
+  document.getElementById('entrataModalTitle').textContent      = id ? 'Modifica entrata' : 'Nuova entrata';
+  document.getElementById('entrataEmoji').value                 = e ? e.emoji       : '';
+  document.getElementById('entrataName').value                  = e ? e.name        : '';
+  document.getElementById('entrataAmount').value                = e ? e.amount      : '';
+  document.getElementById('entrataDescription').value          = e ? (e.description || '') : '';
+  document.getElementById('entrataDeleteBtn').style.display     = id ? 'block' : 'none';
 
   selectedEntrataColor = e ? e.color : POCKET_COLORS[0];
   renderColorSwatches('entrataColorSwatches', selectedEntrataColor, 'selectEntrataColor');
@@ -701,16 +704,17 @@ function updateEntrataPreview() {
 }
 
 function saveEntrata() {
-  const emoji  = document.getElementById('entrataEmoji').value.trim() || '💼';
-  const name   = document.getElementById('entrataName').value.trim();
-  const amount = parseInt(document.getElementById('entrataAmount').value) || 0;
+  const emoji       = document.getElementById('entrataEmoji').value.trim() || '💼';
+  const name        = document.getElementById('entrataName').value.trim();
+  const amount      = parseInt(document.getElementById('entrataAmount').value) || 0;
+  const description = document.getElementById('entrataDescription').value.trim().slice(0, 25);
   if (!name) { alert('Inserisci una causale'); return; }
 
   if (editingEntrataId) {
     const e = state.entrate.find(x => x.id === editingEntrataId);
-    if (e) { e.emoji = emoji; e.name = name; e.amount = amount; e.color = selectedEntrataColor; }
+    if (e) { e.emoji = emoji; e.name = name; e.amount = amount; e.color = selectedEntrataColor; e.description = description; }
   } else {
-    state.entrate.push({ id: generateId(), emoji, name, amount, color: selectedEntrataColor });
+    state.entrate.push({ id: generateId(), emoji, name, amount, color: selectedEntrataColor, description });
   }
   saveState();
   closeEntrataModal();

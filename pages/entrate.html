@@ -47,7 +47,9 @@
 
   <!-- Lista entrate -->
   <div class="page-list-sheet">
-    <div id="entrateList"></div>
+    <div class="page-list-scroll">
+      <div id="entrateList"></div>
+    </div>
   </div>
 
 </main>
@@ -96,6 +98,10 @@
     <div class="form-group">
       <label class="form-label">Importo mensile (€)</label>
       <input type="number" class="form-input" id="entrataAmount" placeholder="2000" min="0" step="1" inputmode="numeric" oninput="updateEntrataPreview()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrizione <span class="form-label-hint">(opzionale, max 25 car.)</span></label>
+      <input type="text" class="form-input" id="entrataDescription" placeholder="es. Entrata mensile" maxlength="25" />
     </div>
     <div class="form-group">
       <label class="form-label">Colore</label>
