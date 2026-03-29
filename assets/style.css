@@ -1070,7 +1070,7 @@ body {
    DASHBOARD
    ────────────────────────────────────────── */
 [data-page="dashboard"] .page-hero {
-  padding-bottom: 16px;
+  padding-bottom: 4px;
 }
 
 .dash-scroll {
