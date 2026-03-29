@@ -18,16 +18,6 @@
 </head>
 <body data-page="home">
 
-<!-- SPLASH SCREEN -->
-<div id="splashScreen">
-  <div class="splash-icon-wrap" id="splashIcon">
-    <span class="material-symbols-outlined">account_balance_wallet</span>
-  </div>
-  <span class="splash-name">Finance</span>
-  <span class="splash-hint">Scorri verso il basso per aprire</span>
-  <span class="splash-version">v4.3.1</span>
-</div>
-
 <!-- Gradient background -->
 <div class="home-bg" aria-hidden="true"></div>
 
@@ -157,19 +147,6 @@
     window.addEventListener('resize', setAppHeight);
   }
 
-  // SPLASH DISABILITATO — test
-  const splash = document.getElementById('splashScreen');
-  splash.style.display = 'none';
-
-  // Pocket di test se non ce ne sono
-  if (!localStorage.getItem('fx_pockets')) {
-    localStorage.setItem('fx_pockets', JSON.stringify([
-      {id:'t1', name:'Affitto', emoji:'🏠', amount:700, color:'#7B2FFF', active:true},
-      {id:'t2', name:'Spesa', emoji:'🛒', amount:350, color:'#00D87C', active:true},
-      {id:'t3', name:'Trasporti', emoji:'🚗', amount:150, color:'#FF6B6B', active:true},
-      {id:'t4', name:'Ristoranti', emoji:'🍕', amount:200, color:'#FFA500', active:true},
-    ]));
-  }
 
 </script>
 </body>
