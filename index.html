@@ -24,8 +24,8 @@
     <span class="material-symbols-outlined">account_balance_wallet</span>
   </div>
   <span class="splash-name">Finance</span>
-  <span class="splash-hint">Scorri verso il basso per aprire</span>
-  <span class="splash-version">v4.2.5</span>
+  <span class="splash-hint">Tocca per aprire</span>
+  <span class="splash-version">v4.2.6</span>
 </div>
 
 <!-- Gradient background -->
@@ -152,7 +152,7 @@
     });
   }
 
-  // Splash: swipe down per aprire (fix BUG-01 — iOS assesta viewport solo al primo tocco fisico)
+  // Splash: tap per aprire
   const splash = document.getElementById('splashScreen');
   const splashIcon = document.getElementById('splashIcon');
   let dismissed = false;
@@ -161,7 +161,6 @@
   function dismissSplash() {
     if (dismissed) return;
     dismissed = true;
-    setAppHeight();
     splashIcon.classList.add('splash-pulse');
     setTimeout(() => {
       splash.classList.add('splash-hide');
@@ -173,10 +172,11 @@
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
-splash.addEventListener('touchend', e => {
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (dy > 40) dismissSplash();
-  }, { passive: true });
+  splash.addEventListener('touchend', e => {
+    e.preventDefault(); // blocca click su elementi sotto durante il fade
+    const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+    if (dy < 20) dismissSplash(); // tap
+  }, { passive: false });
 
 </script>
 </body>
