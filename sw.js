@@ -1,10 +1,11 @@
-const CACHE = 'finance-v81';
+const CACHE = 'finance-v82';
 const ASSETS = [
   '/',
   '/index.html',
   '/pages/entrate.html',
   '/pages/profile.html',
   '/pages/pockets.html',
+  '/pages/dashboard.html',
   '/assets/style.css',
   '/assets/app.js',
   '/manifest.json',

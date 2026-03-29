@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.4';
+const APP_VERSION = 'v4.4.5';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
@@ -8,7 +8,7 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'p1', name: 'Pocket v4.4.4',   emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
+  { id: 'p1', name: 'Pocket v4.4.5',   emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
   { id: 'p2', name: 'Pocket 2',        emoji: '💳', amount: 100, color: '#A78BFA', active: true },
   { id: 'p3', name: 'Pocket 3',        emoji: '💳', amount: 200, color: '#3B82F6', active: true },
   { id: 'p4', name: 'Pocket 4',        emoji: '💳', amount: 300, color: '#10B981', active: true },
@@ -335,28 +335,33 @@ function renderDashboard() {
   const income = totalEntrate();
   const alloc  = totalPockets();
   const libero = income - alloc;
-
   const activePockets = state.pockets.filter(p => p.active !== false);
 
-  // Hero amounts
+  // Hero
   const dashIncome = document.getElementById('dashIncome');
-  const dashLibero = document.getElementById('dashLibero');
   if (dashIncome) dashIncome.textContent = fmtInt(income);
+
+  const dashLibero = document.getElementById('dashLibero');
   if (dashLibero) {
-    dashLibero.textContent = fmtInt(Math.abs(libero));
-    dashLibero.style.color = libero < 0 ? '#FCA5A5' : 'inherit';
+    if (income > 0) {
+      dashLibero.textContent = libero >= 0
+        ? `${fmtInt(libero)} liberi`
+        : `${fmtInt(Math.abs(libero))} in eccesso`;
+      dashLibero.style.color = libero < 0 ? 'var(--danger)' : 'var(--green)';
+    } else {
+      dashLibero.textContent = '';
+    }
   }
 
-  // Stacked distribution bar
+  // Stacked bar
   const bar = document.getElementById('dashStackedBar');
   if (bar) {
     if (income > 0) {
       const segs = activePockets.map(p => {
-        const w = Math.min(100, Math.round((p.amount / income) * 100));
-        return `<div style="width:${w}%;background:${p.color};height:100%;flex-shrink:0"></div>`;
+        const w = Math.min(100, (p.amount / income) * 100);
+        return `<div style="width:${w.toFixed(2)}%;background:${p.color};height:100%;flex-shrink:0"></div>`;
       });
-      // Libero fills remaining space with flex:1 to avoid rounding gaps
-      const libroColor = libero > 0 ? 'rgba(255,255,255,0.15)' : 'transparent';
+      const libroColor = libero > 0 ? 'rgba(255,255,255,0.12)' : 'transparent';
       segs.push(`<div style="flex:1;background:${libroColor};height:100%"></div>`);
       bar.innerHTML = segs.join('');
     } else {
@@ -365,42 +370,87 @@ function renderDashboard() {
   }
 
   const footer = document.getElementById('dashBarFooter');
-  if (footer) footer.textContent = `Distribuzione tra ${activePockets.length} pocket attivi`;
+  if (footer) footer.textContent = `${activePockets.length} pocket attivi`;
 
-  // Pocket list — only active, sorted by amount descending
-  const list = document.getElementById('dashPocketList');
-  if (!list) return;
+  // Donut SVG
+  const donutSvg = document.getElementById('dashDonut');
+  const donutCenter = document.getElementById('dashDonutCenter');
 
-  const sorted = activePockets.slice().sort((a, b) => b.amount - a.amount);
+  if (donutCenter) {
+    donutCenter.textContent = fmtInt(Math.max(0, libero));
+    donutCenter.style.color = libero < 0 ? 'var(--danger)' : 'var(--text-1)';
+  }
 
-  if (sorted.length === 0) {
-    list.innerHTML = `<div class="empty-state" style="padding:28px 24px">
-      <div class="empty-state-icon">💳</div>
+  if (donutSvg) {
+    const R = 70, SW = 18;
+    const C = 2 * Math.PI * R;
+    const gap = 4;
+    const bg = `<circle cx="90" cy="90" r="${R}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="${SW}"/>`;
+
+    if (income > 0 && activePockets.length > 0) {
+      const segments = activePockets
+        .filter(p => p.amount > 0)
+        .map(p => ({ color: p.color, frac: p.amount / income }));
+
+      if (libero > 0) segments.push({ color: 'rgba(255,255,255,0.18)', frac: libero / income });
+
+      const total = segments.reduce((s, seg) => s + seg.frac, 0);
+      if (total > 1) segments.forEach(seg => { seg.frac = seg.frac / total; });
+
+      let cumulative = 0;
+      const circles = segments.map(seg => {
+        const len = Math.max(0, seg.frac * C - gap);
+        const da  = `${len.toFixed(2)} ${(C - len).toFixed(2)}`;
+        const off = (C / 4 - cumulative).toFixed(2);
+        cumulative += seg.frac * C;
+        return `<circle cx="90" cy="90" r="${R}" fill="none" stroke="${seg.color}" stroke-width="${SW}" stroke-dasharray="${da}" stroke-dashoffset="${off}" stroke-linecap="butt"/>`;
+      });
+
+      donutSvg.innerHTML = bg + circles.join('');
+    } else {
+      donutSvg.innerHTML = bg;
+    }
+  }
+
+  // Legend
+  const legend = document.getElementById('dashLegend');
+  if (!legend) return;
+
+  if (activePockets.length === 0) {
+    legend.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">📊</div>
       <div class="empty-state-text">Nessun pocket attivo</div>
-      <div class="empty-state-sub">Vai su Pocket per crearne o attivarne uno</div>
+      <div class="empty-state-sub">Aggiungi pocket per vedere la distribuzione</div>
     </div>`;
     return;
   }
 
-  list.innerHTML = sorted.map(p => {
+  const sorted = activePockets.slice().sort((a, b) => b.amount - a.amount);
+  const rows = sorted.map(p => {
     const pct = income > 0 ? Math.round((p.amount / income) * 100) : 0;
-    return `
-      <div class="dash-card">
-        <div class="dash-card-top">
-          <div class="dash-card-left">
-            <div class="dash-dot" style="background:${p.color}"></div>
-            <span class="dash-card-name">${p.emoji} ${p.name}</span>
-          </div>
-          <span class="dash-card-amount">${fmtInt(p.amount)}</span>
-        </div>
-        <div class="dash-card-bar-row">
-          <div class="dash-bar-track">
-            <div class="dash-bar-fill" style="width:${pct}%;background:${p.color}"></div>
-          </div>
-          <span class="dash-pct">${pct}%</span>
-        </div>
-      </div>`;
-  }).join('');
+    return `<div class="dash-legend-row">
+      <div class="dash-legend-dot" style="background:${p.color}"></div>
+      <span class="dash-legend-name">${p.emoji} ${p.name}</span>
+      <div class="dash-legend-right">
+        <span class="dash-legend-amount">${fmtInt(p.amount)}</span>
+        <span class="dash-legend-pct">${pct}%</span>
+      </div>
+    </div>`;
+  });
+
+  if (libero > 0 && income > 0) {
+    const pct = Math.round((libero / income) * 100);
+    rows.push(`<div class="dash-legend-row">
+      <div class="dash-legend-dot" style="background:rgba(255,255,255,0.2)"></div>
+      <span class="dash-legend-name" style="color:var(--text-2)">Libero</span>
+      <div class="dash-legend-right">
+        <span class="dash-legend-amount" style="color:var(--green)">${fmtInt(libero)}</span>
+        <span class="dash-legend-pct">${pct}%</span>
+      </div>
+    </div>`);
+  }
+
+  legend.innerHTML = rows.join('');
 }
 
 // ── RENDER PARTNER ──

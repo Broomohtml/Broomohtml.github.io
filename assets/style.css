@@ -1067,6 +1067,145 @@ body {
 }
 
 /* ──────────────────────────────────────────
+   DASHBOARD
+   ────────────────────────────────────────── */
+.dash-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 100px;
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0px, black 28px,
+    black calc(100% - 200px),
+    transparent calc(100% - 65px)
+  );
+  mask-image: linear-gradient(to bottom,
+    transparent 0px, black 28px,
+    black calc(100% - 200px),
+    transparent calc(100% - 65px)
+  );
+}
+
+.dash-block {
+  background: var(--surface-1);
+  border-radius: var(--r-xl);
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.dash-stacked-bar {
+  height: 14px;
+  border-radius: 99px;
+  overflow: hidden;
+  display: flex;
+  background: rgba(255,255,255,0.07);
+}
+
+.dash-bar-footer {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.dash-donut-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dash-donut-wrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+.dash-donut-wrap svg {
+  width: 180px;
+  height: 180px;
+}
+
+.dash-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.dash-donut-center-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 4px;
+}
+
+.dash-donut-center-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-1);
+  letter-spacing: -0.02em;
+}
+
+.dash-legend {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.dash-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.dash-legend-row:last-child {
+  border-bottom: none;
+}
+
+.dash-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dash-legend-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-legend-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.dash-legend-amount {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+
+.dash-legend-pct {
+  font-size: 12px;
+  color: var(--text-3);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ──────────────────────────────────────────
    FADE TRANSITION
    ────────────────────────────────────────── */
 body {

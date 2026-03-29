@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Finance" />
+  <meta name="theme-color" content="#0B0B15" />
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="apple-touch-icon" href="../icon-192.png" />
+  <title>Finance — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body data-page="dashboard">
+
+<script>
+  document.documentElement.style.setProperty('--screen-height', window.screen.height + 'px');
+  function setAppHeight() {
+    const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      setAppHeight();
+      setTimeout(setAppHeight, 300);
+    });
+  } else {
+    window.addEventListener('resize', setAppHeight);
+  }
+</script>
+
+<!-- HEADER -->
+<header class="page-top-bar">
+  <button class="page-back-btn" onclick="goTo('home')">
+    <span class="material-symbols-outlined">arrow_back_ios</span>
+  </button>
+  <span class="page-top-title">Dashboard</span>
+  <div style="width:42px"></div>
+</header>
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <section class="page-hero">
+    <div class="page-hero-label">Entrate mensili</div>
+    <div class="page-hero-value" id="dashIncome">€0</div>
+    <div class="page-hero-sub" id="dashLibero"></div>
+  </section>
+
+  <div class="dash-scroll">
+
+    <!-- Barra di distribuzione -->
+    <div class="dash-block">
+      <div class="dash-stacked-bar" id="dashStackedBar"></div>
+      <div class="dash-bar-footer" id="dashBarFooter"></div>
+    </div>
+
+    <!-- Grafico ad anello + legenda -->
+    <div class="dash-block dash-donut-block">
+      <div class="dash-donut-wrap">
+        <svg id="dashDonut" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="90" cy="90" r="70" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="18"/>
+        </svg>
+        <div class="dash-donut-center">
+          <div class="dash-donut-center-label">Libero</div>
+          <div class="dash-donut-center-value" id="dashDonutCenter">€0</div>
+        </div>
+      </div>
+      <div id="dashLegend" class="dash-legend"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item" onclick="goTo('entrate')">
+    <span class="material-symbols-outlined nav-icon">payments</span>
+    <span class="nav-label">Entrate</span>
+  </button>
+  <button class="nav-item" onclick="goTo('home')">
+    <span class="material-symbols-outlined nav-icon">home</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" onclick="goTo('pockets')">
+    <span class="material-symbols-outlined nav-icon">grid_view</span>
+    <span class="nav-label">Pocket</span>
+  </button>
+</nav>
+
+<script src="../assets/app.js"></script>
+</body>
+</html>
