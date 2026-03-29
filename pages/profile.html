@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Finance" />
+  <meta name="theme-color" content="#0B0B15" />
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="apple-touch-icon" href="../icon-192.png" />
+  <title>Finance — Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body data-page="profile">
+
+<!-- HEADER -->
+<header class="page-top-bar">
+  <button class="page-back-btn" onclick="goBack()">
+    <span class="material-symbols-outlined">arrow_back_ios</span>
+  </button>
+  <span class="page-top-title">Account</span>
+  <div style="width:42px"></div>
+</header>
+
+<!-- MAIN -->
+<main class="main-content account-main">
+
+  <!-- Avatar hero -->
+  <div class="account-hero">
+    <div class="account-avatar-circle" id="profileAvatarCircle">B</div>
+    <div class="account-hero-name" id="profileHeroName">Tu</div>
+  </div>
+
+  <!-- Sheet -->
+  <div class="page-list-sheet account-sheet">
+
+    <!-- Profilo -->
+    <div class="account-section-label">Profilo</div>
+    <div class="account-row">
+      <label class="account-row-label" for="accountName">Nome</label>
+      <input type="text" class="account-row-input" id="accountName"
+             placeholder="Il tuo nome" autocomplete="off"
+             onblur="saveAccountName()" />
+    </div>
+
+    <!-- Impostazioni -->
+    <div class="account-section-label">Impostazioni</div>
+    <div class="account-row">
+      <label class="account-row-label" for="accountCurrency">Valuta</label>
+      <select class="account-row-select" id="accountCurrency"
+              onchange="saveAccountCurrency(this.value)">
+        <option value="EUR">€ Euro</option>
+        <option value="GBP">£ Sterlina</option>
+        <option value="USD">$ Dollaro</option>
+      </select>
+    </div>
+    <div class="account-row">
+      <label class="account-row-label" for="accountPartnerName">Nome partner</label>
+      <input type="text" class="account-row-input" id="accountPartnerName"
+             placeholder="Nome partner" autocomplete="off"
+             onblur="saveAccountPartnerName()" />
+    </div>
+    <div class="account-row">
+      <span class="account-row-label">Schermata di avvio</span>
+      <label class="account-toggle">
+        <input type="checkbox" id="accountSplashToggle"
+               onchange="saveAccountSplash(this.checked)" />
+        <span class="account-toggle-track"></span>
+      </label>
+    </div>
+
+    <!-- Dati -->
+    <div class="account-section-label">Dati</div>
+    <button class="account-action-row" onclick="exportCSV()">
+      <span class="material-symbols-outlined account-action-icon">download</span>
+      <span class="account-action-label">Esporta CSV</span>
+      <span class="material-symbols-outlined account-action-chevron">chevron_right</span>
+    </button>
+    <button class="account-action-row account-action-row--danger" onclick="confirmClearAll()">
+      <span class="material-symbols-outlined account-action-icon">delete_forever</span>
+      <span class="account-action-label">Elimina tutti i dati</span>
+      <span class="material-symbols-outlined account-action-chevron">chevron_right</span>
+    </button>
+
+    <!-- Footer versione -->
+    <div class="account-footer">Finance · <span id="appVersion"></span></div>
+
+  </div>
+
+</main>
+
+<script src="../assets/app.js"></script>
+<script>
+  document.documentElement.style.setProperty('--screen-height', window.screen.height + 'px');
+  function setAppHeight() {
+    const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      setAppHeight();
+      setTimeout(setAppHeight, 300);
+    });
+  } else {
+    window.addEventListener('resize', setAppHeight);
+  }
+</script>
+</body>
+</html>

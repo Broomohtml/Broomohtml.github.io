@@ -1,4 +1,7 @@
 // ── CONSTANTS ──
+const APP_VERSION = 'v4.4.0';
+const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
+
 const POCKET_COLORS = [
   '#7C3AED', '#A78BFA', '#3B82F6', '#10B981',
   '#F59E0B', '#EF4444', '#EC4899', '#06B6D4',
@@ -35,8 +38,9 @@ function loadState() {
 
   const partner = JSON.parse(localStorage.getItem('fx_partner') || JSON.stringify({ nameB: '', amtB: 0 }));
   const profile = JSON.parse(localStorage.getItem('fx_profile') || '{}');
+  const settings = JSON.parse(localStorage.getItem('fx_settings') || '{"currency":"EUR","splashEnabled":false}');
 
-  return { pockets, entrate, partner, profile };
+  return { pockets, entrate, partner, profile, settings };
 }
 
 function saveState() {
@@ -44,6 +48,7 @@ function saveState() {
   localStorage.setItem('fx_entrate_list', JSON.stringify(state.entrate));
   localStorage.setItem('fx_partner',      JSON.stringify(state.partner));
   localStorage.setItem('fx_profile',      JSON.stringify(state.profile));
+  localStorage.setItem('fx_settings',     JSON.stringify(state.settings));
 }
 
 let state = loadState();
@@ -54,7 +59,8 @@ let selectedEntrataColor = POCKET_COLORS[0];
 
 // ── HELPERS ──
 function fmtInt(n) {
-  return '€' + Math.round(n).toLocaleString('it-IT');
+  const sym = CURRENCY_SYMBOLS[(state && state.settings && state.settings.currency) || 'EUR'] || '€';
+  return sym + Math.round(n).toLocaleString('it-IT');
 }
 
 function fmtNum(n) {
@@ -328,26 +334,67 @@ function loadPartnerInputs() {
   renderPartner();
 }
 
-// ── PROFILE ──
+// ── ACCOUNT PAGE ──
 function loadProfileInputs() {
   const p = state.profile || {};
-  document.getElementById('profileName').value      = p.name      || '';
-  document.getElementById('profileBirthdate').value = p.birthdate || '';
-  document.getElementById('profileJob').value       = p.job       || '';
+  const nameEl = document.getElementById('accountName');
+  if (nameEl) nameEl.value = p.name || '';
+
+  const partnerEl = document.getElementById('accountPartnerName');
+  if (partnerEl) partnerEl.value = (state.partner && state.partner.nameB) || '';
+
+  const currencyEl = document.getElementById('accountCurrency');
+  if (currencyEl) currencyEl.value = (state.settings && state.settings.currency) || 'EUR';
+
+  const splashEl = document.getElementById('accountSplashToggle');
+  if (splashEl) splashEl.checked = !!(state.settings && state.settings.splashEnabled);
+
+  const versionEl = document.getElementById('appVersion');
+  if (versionEl) versionEl.textContent = APP_VERSION;
+
   updateProfileHero();
 }
 
-function saveProfile() {
-  state.profile = {
-    name:      document.getElementById('profileName').value.trim(),
-    birthdate: document.getElementById('profileBirthdate').value,
-    job:       document.getElementById('profileJob').value.trim(),
-  };
+function saveAccountName() {
+  const name = (document.getElementById('accountName').value || '').trim();
+  state.profile = { ...state.profile, name };
   saveState();
   updateHeaderAvatar();
   updateProfileHero();
-  const nameA = document.getElementById('partnerNameA');
-  if (nameA) nameA.textContent = profileName();
+}
+
+function saveAccountPartnerName() {
+  const nameB = (document.getElementById('accountPartnerName').value || '').trim();
+  state.partner = { ...state.partner, nameB };
+  saveState();
+}
+
+function saveAccountCurrency(val) {
+  if (!state.settings) state.settings = {};
+  state.settings.currency = val;
+  saveState();
+}
+
+function saveAccountSplash(checked) {
+  if (!state.settings) state.settings = {};
+  state.settings.splashEnabled = checked;
+  saveState();
+}
+
+function exportCSV() {
+  const rows = [['Tipo', 'Causale', 'Emoji', 'Importo mensile']];
+  state.entrate.forEach(e => rows.push(['Entrata', e.name, e.emoji, e.amount]));
+  state.pockets.forEach(p => rows.push(['Pocket', p.name, p.emoji, p.amount]));
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'finance-export.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 function updateProfileHero() {

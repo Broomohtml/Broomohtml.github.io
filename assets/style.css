@@ -699,6 +699,206 @@ body {
 }
 
 /* ──────────────────────────────────────────
+   PAGE TOP BAR — header per pagine secondarie
+   ────────────────────────────────────────── */
+.page-top-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 12px;
+  position: relative;
+  z-index: 10;
+}
+.page-back-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-1);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.page-back-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+.page-top-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+/* ──────────────────────────────────────────
+   ACCOUNT PAGE
+   ────────────────────────────────────────── */
+.account-main {
+  overflow: hidden;
+}
+.account-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 24px 28px;
+  flex-shrink: 0;
+}
+.account-avatar-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--violet-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 32px;
+  color: #fff;
+  margin-bottom: 12px;
+  box-shadow: 0 0 40px rgba(123,47,255,0.4);
+}
+.account-hero-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+.account-sheet {
+  padding-bottom: max(32px, env(safe-area-inset-bottom, 32px));
+}
+.account-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 20px 20px 8px;
+}
+.account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+.account-row-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-1);
+  flex-shrink: 0;
+}
+.account-row-input {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text-2);
+  text-align: right;
+  flex: 1;
+  min-width: 0;
+}
+.account-row-input::placeholder {
+  color: var(--text-3);
+}
+.account-row-select {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text-2);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.account-toggle {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 31px;
+  flex-shrink: 0;
+}
+.account-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.account-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.account-toggle-track::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--text-3);
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s, background 0.2s;
+}
+.account-toggle input:checked + .account-toggle-track {
+  background: var(--violet);
+  border-color: var(--violet);
+}
+.account-toggle input:checked + .account-toggle-track::after {
+  transform: translateX(20px);
+  background: #fff;
+}
+.account-action-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: none;
+  width: 100%;
+  color: var(--text-1);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+}
+.account-action-row--danger {
+  color: var(--danger);
+}
+.account-action-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.account-action-label {
+  flex: 1;
+}
+.account-action-chevron {
+  font-size: 20px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.account-action-row--danger .account-action-chevron {
+  color: var(--danger);
+  opacity: 0.5;
+}
+.account-footer {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+  padding: 32px 20px 16px;
+}
+
+/* ──────────────────────────────────────────
    FADE TRANSITION
    ────────────────────────────────────────── */
 body {
