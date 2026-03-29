@@ -1073,6 +1073,19 @@ body {
   padding-bottom: 4px;
 }
 
+[data-page="dashboard"] .dash-scroll {
+  -webkit-mask-image: linear-gradient(to bottom,
+    black 0px,
+    black calc(100% - 200px),
+    transparent calc(100% - 65px)
+  );
+  mask-image: linear-gradient(to bottom,
+    black 0px,
+    black calc(100% - 200px),
+    transparent calc(100% - 65px)
+  );
+}
+
 .dash-scroll {
   flex: 1;
   overflow-y: auto;

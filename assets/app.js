@@ -338,20 +338,6 @@ function renderDashboard() {
   const activePockets = state.pockets.filter(p => p.active !== false);
 
   // Hero
-  const dashIncome = document.getElementById('dashIncome');
-  if (dashIncome) dashIncome.textContent = fmtInt(income);
-
-  const dashLibero = document.getElementById('dashLibero');
-  if (dashLibero) {
-    if (income > 0) {
-      dashLibero.textContent = libero >= 0
-        ? `${fmtInt(libero)} liberi`
-        : `${fmtInt(Math.abs(libero))} in eccesso`;
-      dashLibero.style.color = libero < 0 ? 'var(--danger)' : 'var(--green)';
-    } else {
-      dashLibero.textContent = '';
-    }
-  }
 
   // Stacked bar
   const bar = document.getElementById('dashStackedBar');
@@ -376,10 +362,7 @@ function renderDashboard() {
   const donutSvg = document.getElementById('dashDonut');
   const donutCenter = document.getElementById('dashDonutCenter');
 
-  if (donutCenter) {
-    donutCenter.textContent = fmtInt(Math.max(0, libero));
-    donutCenter.style.color = libero < 0 ? 'var(--danger)' : 'var(--text-1)';
-  }
+  if (donutCenter) donutCenter.textContent = fmtInt(income);
 
   if (donutSvg) {
     const R = 70, SW = 18;
