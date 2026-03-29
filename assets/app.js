@@ -8,7 +8,7 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'affitto',   name: 'Affitto',      emoji: '🏠', amount: 400, color: '#7C3AED', active: true },
+  { id: 'affitto',   name: 'v4.4.1',       emoji: '🏠', amount: 400, color: '#7C3AED', active: true },
   { id: 'emergenze', name: 'Emergenze',    emoji: '🚨', amount: 250, color: '#EF4444', active: true },
   { id: 'spesa',     name: 'Spesa & Casa', emoji: '🛒', amount: 450, color: '#10B981', active: true },
   { id: 'gaming',    name: 'Gaming',       emoji: '🎮', amount: 150, color: '#F59E0B', active: true },
