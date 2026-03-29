@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.3.9';
+const APP_VERSION = 'v4.4.4';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
@@ -8,7 +8,7 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'p1', name: 'Pocket v4.4.3.9', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
+  { id: 'p1', name: 'Pocket v4.4.4',   emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
   { id: 'p2', name: 'Pocket 2',        emoji: '💳', amount: 100, color: '#A78BFA', active: true },
   { id: 'p3', name: 'Pocket 3',        emoji: '💳', amount: 200, color: '#3B82F6', active: true },
   { id: 'p4', name: 'Pocket 4',        emoji: '💳', amount: 300, color: '#10B981', active: true },
@@ -191,11 +191,9 @@ function renderEntrate() {
       </div>`;
   }).join('');
 
-  if (entrateFilter === 'attivi') {
-    container.innerHTML += `<button class="add-card" onclick="openEntrataModal(null)">
-      <span class="material-symbols-outlined">add_circle</span>Aggiungi entrata
-    </button>`;
-  }
+  container.innerHTML += `<button class="add-card" onclick="openEntrataModal(null)">
+    <span class="material-symbols-outlined">add_circle</span>Aggiungi entrata
+  </button>`;
   initDragHandles('entrateList', state.entrate);
 }
 
@@ -294,11 +292,9 @@ function renderPockets() {
   };
 
   container.innerHTML = visible.map(cardHtml).join('');
-  if (pocketsFilter === 'attivi') {
-    container.innerHTML += `<button class="add-card" onclick="openPocketModal(null)">
-      <span class="material-symbols-outlined">add_circle</span>Aggiungi pocket
-    </button>`;
-  }
+  container.innerHTML += `<button class="add-card" onclick="openPocketModal(null)">
+    <span class="material-symbols-outlined">add_circle</span>Aggiungi pocket
+  </button>`;
   initDragHandles('pocketsList', state.pockets);
 }
 
