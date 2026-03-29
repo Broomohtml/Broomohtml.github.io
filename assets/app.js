@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.3.4';
+const APP_VERSION = 'v4.4.3.5';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
@@ -8,7 +8,7 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'p1', name: 'Pocket v4.4.3.4', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
+  { id: 'p1', name: 'Pocket v4.4.3.5', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
   { id: 'p2', name: 'Pocket 2',        emoji: '💳', amount: 100, color: '#A78BFA', active: true },
   { id: 'p3', name: 'Pocket 3',        emoji: '💳', amount: 200, color: '#3B82F6', active: true },
   { id: 'p4', name: 'Pocket 4',        emoji: '💳', amount: 300, color: '#10B981', active: true },
@@ -171,7 +171,13 @@ function renderEntrate() {
 function renderPockets() {
   const container = document.getElementById('pocketsList');
   if (!container) return;
-  const count     = document.getElementById('pocketsCount');
+  const count    = document.getElementById('pocketsCount');
+  const totalEl  = document.getElementById('pocketsTotalValue');
+
+  if (totalEl) totalEl.textContent = fmtInt(totalPockets());
+
+  const searchEl = document.getElementById('pocketsSearch');
+  const query    = searchEl ? searchEl.value.toLowerCase().trim() : '';
 
   if (state.pockets.length === 0) {
     if (count) count.textContent = 'Gestisci i tuoi budget mensili';
@@ -189,25 +195,51 @@ function renderPockets() {
 
   const isOff = p => p.active === false;
 
-  container.innerHTML = state.pockets.map((p, idx) => `
-    <div class="pocket-card pocket-card--full ${isOff(p) ? 'pocket-card--inactive' : ''}"
-         data-id="${p.id}" data-idx="${idx}"
-         onclick="openPocketModal('${p.id}')">
-      <div class="drag-handle" data-idx="${idx}" onclick="event.stopPropagation()">
-        <span class="material-symbols-outlined">drag_indicator</span>
-      </div>
-      <div class="pocket-icon pocket-icon--lg" style="background:${p.color}20;color:${p.color}">${p.emoji}</div>
-      <div class="pocket-card-info">
-        <div class="pocket-card-name">${p.name}</div>
-        <div class="pocket-card-amount--sub">${fmtInt(p.amount)}</div>
-      </div>
-      <button class="pocket-toggle ${isOff(p) ? 'pocket-toggle--off' : ''}"
-              onclick="togglePocket('${p.id}', event)">
-        <div class="pocket-toggle-dot"></div>
-      </button>
-    </div>
-  `).join('');
+  const list = query
+    ? state.pockets.filter(p => p.name.toLowerCase().includes(query))
+    : state.pockets;
 
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <div class="empty-state-text">Nessun risultato</div>
+        <div class="empty-state-sub">Prova con un termine diverso</div>
+      </div>`;
+    return;
+  }
+
+  const active   = list.filter(p => !isOff(p));
+  const inactive = list.filter(p => isOff(p));
+
+  const cardHtml = (p) => {
+    const idx = state.pockets.indexOf(p);
+    const off = isOff(p);
+    return `
+      <div class="pocket-card pocket-card--full ${off ? 'pocket-card--inactive' : ''}"
+           data-id="${p.id}" data-idx="${idx}"
+           onclick="openPocketModal('${p.id}')">
+        ${!off ? `<div class="drag-handle" data-idx="${idx}" onclick="event.stopPropagation()">
+          <span class="material-symbols-outlined">drag_indicator</span>
+        </div>` : `<div class="drag-handle drag-handle--placeholder"></div>`}
+        <div class="pocket-icon pocket-icon--lg" style="background:${p.color}20;color:${p.color}">${p.emoji}</div>
+        <div class="pocket-card-info">
+          <div class="pocket-card-name">${p.name}</div>
+          <div class="pocket-card-amount--sub">${fmtInt(p.amount)}</div>
+        </div>
+        <button class="pocket-toggle ${off ? 'pocket-toggle--off' : ''}"
+                onclick="togglePocket('${p.id}', event)">
+          <div class="pocket-toggle-dot"></div>
+        </button>
+      </div>`;
+  };
+
+  let html = active.map(cardHtml).join('');
+  if (inactive.length > 0) {
+    html += `<div class="pockets-section-divider">Disattivati</div>`;
+    html += inactive.map(cardHtml).join('');
+  }
+  container.innerHTML = html;
   initDragHandles();
 }
 

@@ -701,6 +701,79 @@ body {
 }
 
 /* ──────────────────────────────────────────
+   POCKET FULL CARD — pagina pockets
+   ────────────────────────────────────────── */
+.pocket-card--full {
+  position: relative;
+}
+.pocket-card--inactive {
+  opacity: 0.38;
+}
+.pocket-card.is-dragging {
+  opacity: 0;
+}
+.pocket-card-amount--sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  flex-shrink: 0;
+  color: var(--text-3);
+  touch-action: none;
+  cursor: grab;
+}
+.drag-handle .material-symbols-outlined {
+  font-size: 22px;
+}
+.drag-handle--placeholder {
+  pointer-events: none;
+}
+.pocket-toggle {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--violet);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  padding: 0;
+}
+.pocket-toggle--off {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+}
+.pocket-toggle-dot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px;
+  left: calc(100% - 23px);
+  transition: left 0.2s, background 0.2s;
+}
+.pocket-toggle--off .pocket-toggle-dot {
+  left: 3px;
+  background: var(--text-3);
+}
+.pockets-section-divider {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 20px 20px 8px;
+}
+
+/* ──────────────────────────────────────────
    EMPTY STATE
    ────────────────────────────────────────── */
 .empty-state {
