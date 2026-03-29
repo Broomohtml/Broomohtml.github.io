@@ -1069,6 +1069,10 @@ body {
 /* ──────────────────────────────────────────
    DASHBOARD
    ────────────────────────────────────────── */
+[data-page="dashboard"] .page-hero {
+  padding-bottom: 16px;
+}
+
 .dash-scroll {
   flex: 1;
   overflow-y: auto;
