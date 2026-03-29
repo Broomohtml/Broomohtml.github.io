@@ -47,6 +47,13 @@
 
   <!-- Lista entrate -->
   <div class="page-list-sheet">
+    <div class="list-sheet-header">
+      <span class="list-sheet-title">Le tue entrate</span>
+      <div class="filter-toggle">
+        <button class="filter-toggle-btn active" id="filterEntrateAttivi" onclick="setEntrateFilter('attivi')">Attivi</button>
+        <button class="filter-toggle-btn" id="filterEntrateDisattivati" onclick="setEntrateFilter('disattivati')">Disattivati</button>
+      </div>
+    </div>
     <div class="page-list-scroll">
       <div id="entrateList"></div>
     </div>

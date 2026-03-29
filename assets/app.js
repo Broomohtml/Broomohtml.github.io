@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.3.6';
+const APP_VERSION = 'v4.4.3.7';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
@@ -8,7 +8,7 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'p1', name: 'Pocket v4.4.3.6', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
+  { id: 'p1', name: 'Pocket v4.4.3.7', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
   { id: 'p2', name: 'Pocket 2',        emoji: '💳', amount: 100, color: '#A78BFA', active: true },
   { id: 'p3', name: 'Pocket 3',        emoji: '💳', amount: 200, color: '#3B82F6', active: true },
   { id: 'p4', name: 'Pocket 4',        emoji: '💳', amount: 300, color: '#10B981', active: true },
@@ -41,6 +41,8 @@ function loadState() {
       ? [{ id: 'stipendio', name: 'Stipendio', emoji: '💼', amount: oldVal, color: '#7C3AED' }]
       : JSON.parse(JSON.stringify(DEFAULT_ENTRATE));
   }
+  // Migration: ensure all entrate have `active` field
+  entrate = entrate.map(e => ({ active: true, ...e }));
 
   // Ensure all pockets have the `active` field (migration from older saves)
   const rawPockets = JSON.parse(localStorage.getItem('fx_pockets') || JSON.stringify(DEFAULT_POCKETS));
@@ -66,7 +68,8 @@ let editingPocketId   = null;
 let editingEntrataId  = null;
 let selectedPocketColor  = POCKET_COLORS[0];
 let selectedEntrataColor = POCKET_COLORS[0];
-let pocketsFilter = 'attivi'; // 'attivi' | 'tutti'
+let pocketsFilter = 'attivi';  // 'attivi' | 'disattivati'
+let entrateFilter = 'attivi';  // 'attivi' | 'disattivati'
 
 // ── HELPERS ──
 function fmtInt(n) {
@@ -83,7 +86,9 @@ function generateId() {
 }
 
 function totalEntrate() {
-  return state.entrate.reduce((s, e) => s + e.amount, 0);
+  return state.entrate
+    .filter(e => e.active !== false)
+    .reduce((s, e) => s + e.amount, 0);
 }
 
 function totalPockets() {
@@ -128,9 +133,16 @@ function renderEntrate() {
 
   const searchEl = document.getElementById('entrateSearch');
   const query    = searchEl ? searchEl.value.toLowerCase().trim() : '';
-  const list     = query
+
+  const isOff = e => e.active === false;
+  const showDisattivati = entrateFilter === 'disattivati';
+
+  const base = query
     ? state.entrate.filter(e => e.name.toLowerCase().includes(query))
     : state.entrate;
+
+  const activeCount = state.entrate.filter(e => !isOff(e)).length;
+  if (count) count.textContent = activeCount + (activeCount === 1 ? ' entrata attiva' : ' entrate attive');
 
   if (state.entrate.length === 0) {
     if (count) count.textContent = '';
@@ -143,39 +155,58 @@ function renderEntrate() {
     return;
   }
 
-  if (count) count.textContent = state.entrate.length + (state.entrate.length === 1 ? ' entrata' : ' entrate');
+  const visible = showDisattivati
+    ? base.filter(e => isOff(e))
+    : base.filter(e => !isOff(e));
 
-  if (list.length === 0) {
+  if (visible.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">🔍</div>
-        <div class="empty-state-text">Nessun risultato</div>
-        <div class="empty-state-sub">Prova con un termine diverso</div>
+        <div class="empty-state-icon">${query ? '🔍' : '💤'}</div>
+        <div class="empty-state-text">${query ? 'Nessun risultato' : 'Nessuna entrata disattivata'}</div>
+        <div class="empty-state-sub">${query ? 'Prova con un termine diverso' : 'Attiva/disattiva le entrate dal toggle'}</div>
       </div>`;
     return;
   }
 
-  container.innerHTML = list.map(e => `
-    <div class="pocket-card" onclick="openEntrataModal('${e.id}')">
-      <div class="pocket-icon pocket-icon--sm" style="background:${e.color}20;color:${e.color}">${e.emoji}</div>
-      <div class="pocket-card-info">
-        <div class="pocket-card-name">${e.name}</div>
-        <div class="pocket-card-sub">${e.description || 'Entrata mensile'}</div>
-      </div>
-      <span class="pocket-card-amount--inline">${fmtInt(e.amount)}</span>
-      <span class="material-symbols-outlined pocket-card-chevron">chevron_right</span>
-    </div>
-  `).join('');
+  container.innerHTML = visible.map(e => {
+    const idx = state.entrate.indexOf(e);
+    const off = isOff(e);
+    return `
+      <div class="pocket-card pocket-card--full ${off ? 'pocket-card--inactive' : ''}"
+           data-id="${e.id}" data-idx="${idx}"
+           onclick="openEntrataModal('${e.id}')">
+        ${!off ? `<div class="drag-handle" data-idx="${idx}" onclick="event.stopPropagation()">
+          <span class="material-symbols-outlined">drag_indicator</span>
+        </div>` : `<div class="drag-handle drag-handle--placeholder"></div>`}
+        <div class="pocket-icon pocket-icon--lg" style="background:${e.color}20;color:${e.color}">${e.emoji}</div>
+        <div class="pocket-card-info">
+          <div class="pocket-card-name">${e.name}</div>
+          <div class="pocket-card-amount--sub">${fmtInt(e.amount)}</div>
+        </div>
+        <button class="pocket-toggle ${off ? 'pocket-toggle--off' : ''}"
+                onclick="toggleEntrata('${e.id}', event)">
+          <div class="pocket-toggle-dot"></div>
+        </button>
+      </div>`;
+  }).join('');
+
+  initDragHandles('entrateList', state.entrate);
 }
 
-// ── POCKETS FILTER TOGGLE ──
+// ── FILTER TOGGLES ──
 function setPocketsFilter(val) {
   pocketsFilter = val;
-  const btnAttivi = document.getElementById('filterBtnAttivi');
-  const btnTutti  = document.getElementById('filterBtnTutti');
-  if (btnAttivi) btnAttivi.classList.toggle('active', val === 'attivi');
-  if (btnTutti)  btnTutti.classList.toggle('active', val === 'tutti');
+  document.getElementById('filterBtnAttivi')?.classList.toggle('active', val === 'attivi');
+  document.getElementById('filterBtnDisattivati')?.classList.toggle('active', val === 'disattivati');
   renderPockets();
+}
+
+function setEntrateFilter(val) {
+  entrateFilter = val;
+  document.getElementById('filterEntrateAttivi')?.classList.toggle('active', val === 'attivi');
+  document.getElementById('filterEntrateDisattivati')?.classList.toggle('active', val === 'disattivati');
+  renderEntrate();
 }
 
 // ── RENDER POCKETS (tab pocket — con drag handle e toggle) ──
@@ -220,15 +251,17 @@ function renderPockets() {
     return;
   }
 
-  const showAll = pocketsFilter === 'tutti';
-  const visible = showAll ? list : list.filter(p => !isOff(p));
+  const visible = pocketsFilter === 'disattivati'
+    ? list.filter(p => isOff(p))
+    : list.filter(p => !isOff(p));
 
   if (visible.length === 0) {
+    const isSearch = query.length > 0;
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">💳</div>
-        <div class="empty-state-text">Nessun pocket attivo</div>
-        <div class="empty-state-sub">Premi "Tutti" per vedere i disattivati</div>
+        <div class="empty-state-icon">${isSearch ? '🔍' : (pocketsFilter === 'disattivati' ? '💤' : '💳')}</div>
+        <div class="empty-state-text">${isSearch ? 'Nessun risultato' : (pocketsFilter === 'disattivati' ? 'Nessun pocket disattivato' : 'Nessun pocket attivo')}</div>
+        <div class="empty-state-sub">${isSearch ? 'Prova con un termine diverso' : 'Usa il toggle per cambiare vista'}</div>
       </div>`;
     return;
   }
@@ -256,7 +289,7 @@ function renderPockets() {
   };
 
   container.innerHTML = visible.map(cardHtml).join('');
-  initDragHandles();
+  initDragHandles('pocketsList', state.pockets);
 }
 
 // ── RENDER HOME POCKETS (solo attivi, card compatte) ──
@@ -547,22 +580,35 @@ function togglePocket(id, event) {
   renderDashboard();
 }
 
-// ── DRAG TO REORDER POCKETS ──
+// ── ENTRATA TOGGLE ──
+function toggleEntrata(id, event) {
+  event.stopPropagation();
+  const e = state.entrate.find(x => x.id === id);
+  if (!e) return;
+  e.active = e.active === false ? true : false;
+  saveState();
+  renderEntrate();
+  renderSummary();
+  renderDashboard();
+}
+
+// ── DRAG TO REORDER ──
 let dragState = null;
 
-function initDragHandles() {
-  const container = document.getElementById('pocketsList');
+function initDragHandles(containerId, stateList) {
+  const container = document.getElementById(containerId);
   if (!container) return;
   container.querySelectorAll('.drag-handle').forEach(handle => {
     const idx = parseInt(handle.dataset.idx);
-    handle.addEventListener('touchstart', e => startDrag(e, idx), { passive: false });
+    if (isNaN(idx)) return;
+    handle.addEventListener('touchstart', e => startDrag(e, idx, containerId, stateList), { passive: false });
   });
 }
 
-function startDrag(e, idx) {
+function startDrag(e, idx, containerId, stateList) {
   e.stopPropagation();
 
-  const container = document.getElementById('pocketsList');
+  const container = document.getElementById(containerId);
   const cards = Array.from(container.querySelectorAll('.pocket-card'));
   const card  = cards[idx];
   if (!card) return;
@@ -596,6 +642,7 @@ function startDrag(e, idx) {
     startTouchY: touch.clientY,
     startCardTop: rect.top,
     currentTarget: idx,
+    stateList,
   };
 
   document.addEventListener('touchmove', onDragMove, { passive: false });
@@ -632,12 +679,12 @@ function onDragEnd() {
   dragState.ghost.remove();
   dragState.card.classList.remove('is-dragging');
 
-  const { idx, currentTarget } = dragState;
+  const { idx, currentTarget, stateList } = dragState;
   dragState = null;
 
   if (currentTarget !== idx) {
-    const moved = state.pockets.splice(idx, 1)[0];
-    state.pockets.splice(currentTarget, 0, moved);
+    const moved = stateList.splice(idx, 1)[0];
+    stateList.splice(currentTarget, 0, moved);
     saveState();
     renderAll();
   }
