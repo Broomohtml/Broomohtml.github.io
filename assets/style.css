@@ -701,6 +701,47 @@ body {
 }
 
 /* ──────────────────────────────────────────
+   LIST SHEET HEADER — header fisso dentro sheet
+   ────────────────────────────────────────── */
+.list-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 12px;
+  flex-shrink: 0;
+}
+.list-sheet-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.filter-toggle {
+  display: flex;
+  background: var(--surface-3);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.filter-toggle-btn {
+  border: none;
+  background: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.filter-toggle-btn.active {
+  background: var(--violet);
+  color: #fff;
+}
+
+/* ──────────────────────────────────────────
    POCKET FULL CARD — pagina pockets
    ────────────────────────────────────────── */
 .pocket-card--full {

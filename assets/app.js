@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.3.5';
+const APP_VERSION = 'v4.4.3.6';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
@@ -8,7 +8,7 @@ const POCKET_COLORS = [
 ];
 
 const DEFAULT_POCKETS = [
-  { id: 'p1', name: 'Pocket v4.4.3.5', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
+  { id: 'p1', name: 'Pocket v4.4.3.6', emoji: '💳', amount: 0,   color: '#7C3AED', active: true },
   { id: 'p2', name: 'Pocket 2',        emoji: '💳', amount: 100, color: '#A78BFA', active: true },
   { id: 'p3', name: 'Pocket 3',        emoji: '💳', amount: 200, color: '#3B82F6', active: true },
   { id: 'p4', name: 'Pocket 4',        emoji: '💳', amount: 300, color: '#10B981', active: true },
@@ -66,6 +66,7 @@ let editingPocketId   = null;
 let editingEntrataId  = null;
 let selectedPocketColor  = POCKET_COLORS[0];
 let selectedEntrataColor = POCKET_COLORS[0];
+let pocketsFilter = 'attivi'; // 'attivi' | 'tutti'
 
 // ── HELPERS ──
 function fmtInt(n) {
@@ -167,6 +168,16 @@ function renderEntrate() {
   `).join('');
 }
 
+// ── POCKETS FILTER TOGGLE ──
+function setPocketsFilter(val) {
+  pocketsFilter = val;
+  const btnAttivi = document.getElementById('filterBtnAttivi');
+  const btnTutti  = document.getElementById('filterBtnTutti');
+  if (btnAttivi) btnAttivi.classList.toggle('active', val === 'attivi');
+  if (btnTutti)  btnTutti.classList.toggle('active', val === 'tutti');
+  renderPockets();
+}
+
 // ── RENDER POCKETS (tab pocket — con drag handle e toggle) ──
 function renderPockets() {
   const container = document.getElementById('pocketsList');
@@ -209,8 +220,18 @@ function renderPockets() {
     return;
   }
 
-  const active   = list.filter(p => !isOff(p));
-  const inactive = list.filter(p => isOff(p));
+  const showAll = pocketsFilter === 'tutti';
+  const visible = showAll ? list : list.filter(p => !isOff(p));
+
+  if (visible.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">💳</div>
+        <div class="empty-state-text">Nessun pocket attivo</div>
+        <div class="empty-state-sub">Premi "Tutti" per vedere i disattivati</div>
+      </div>`;
+    return;
+  }
 
   const cardHtml = (p) => {
     const idx = state.pockets.indexOf(p);
@@ -234,12 +255,7 @@ function renderPockets() {
       </div>`;
   };
 
-  let html = active.map(cardHtml).join('');
-  if (inactive.length > 0) {
-    html += `<div class="pockets-section-divider">Disattivati</div>`;
-    html += inactive.map(cardHtml).join('');
-  }
-  container.innerHTML = html;
+  container.innerHTML = visible.map(cardHtml).join('');
   initDragHandles();
 }
 

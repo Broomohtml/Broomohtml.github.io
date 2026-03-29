@@ -48,6 +48,13 @@
 
   <!-- Lista pocket -->
   <div class="page-list-sheet">
+    <div class="list-sheet-header">
+      <span class="list-sheet-title">I tuoi pocket</span>
+      <div class="filter-toggle" id="pocketsFilterToggle">
+        <button class="filter-toggle-btn active" id="filterBtnAttivi" onclick="setPocketsFilter('attivi')">Attivi</button>
+        <button class="filter-toggle-btn" id="filterBtnTutti" onclick="setPocketsFilter('tutti')">Tutti</button>
+      </div>
+    </div>
     <div class="page-list-scroll">
       <div id="pocketsList"></div>
     </div>
