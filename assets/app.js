@@ -1,5 +1,5 @@
 // ── CONSTANTS ──
-const APP_VERSION = 'v4.4.3.2';
+const APP_VERSION = 'v4.4.3.3';
 const CURRENCY_SYMBOLS = { EUR: '€', GBP: '£', USD: '$' };
 
 const POCKET_COLORS = [
