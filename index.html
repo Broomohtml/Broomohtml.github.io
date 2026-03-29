@@ -24,8 +24,8 @@
     <span class="material-symbols-outlined">account_balance_wallet</span>
   </div>
   <span class="splash-name">Finance</span>
-  <span class="splash-hint">Tocca per aprire</span>
-  <span class="splash-version">v4.2.7</span>
+  <span class="splash-hint">Scorri verso il basso per aprire</span>
+  <span class="splash-version">v4.2.8</span>
 </div>
 
 <!-- Gradient background -->
@@ -139,16 +139,22 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
-  // Fix tastiera iOS: aggiorna altezza dopo chiusura tastiera
+  // Altezza reale viewport
+  function setAppHeight() {
+    const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  setAppHeight();
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
-      setTimeout(() => {
-        document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
-      }, 300);
+      setAppHeight();
+      setTimeout(setAppHeight, 300);
     });
+  } else {
+    window.addEventListener('resize', setAppHeight);
   }
 
-  // Splash: tap per aprire
+  // Splash: scorri verso il basso per aprire
   const splash = document.getElementById('splashScreen');
   const splashIcon = document.getElementById('splashIcon');
   let dismissed = false;
@@ -157,8 +163,7 @@
   function dismissSplash() {
     if (dismissed) return;
     dismissed = true;
-    // Al tap iOS ha già assestato il viewport — innerHeight è corretto
-    document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+    setAppHeight();
     splashIcon.classList.add('splash-pulse');
     setTimeout(() => {
       splash.classList.add('splash-hide');
@@ -171,10 +176,9 @@
   }, { passive: true });
 
   splash.addEventListener('touchend', e => {
-    e.preventDefault(); // blocca click su elementi sotto durante il fade
-    const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
-    if (dy < 20) dismissSplash(); // tap
-  }, { passive: false });
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (dy > 40) dismissSplash();
+  }, { passive: true });
 
 </script>
 </body>

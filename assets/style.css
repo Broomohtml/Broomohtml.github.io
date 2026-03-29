@@ -45,9 +45,9 @@ body {
   background: var(--bg);
   color: var(--text-1);
   height: var(--app-height, 100dvh);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
