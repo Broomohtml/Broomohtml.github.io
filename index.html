@@ -25,7 +25,7 @@
   </div>
   <span class="splash-name">Finance</span>
   <span class="splash-hint">Scorri verso il basso per aprire</span>
-  <span class="splash-version">v4.2.9</span>
+  <span class="splash-version">v4.3.0</span>
 </div>
 
 <!-- Gradient background -->
@@ -157,31 +157,19 @@
     window.addEventListener('resize', setAppHeight);
   }
 
-  // Splash: scorri verso il basso per aprire
+  // SPLASH DISABILITATO — test
   const splash = document.getElementById('splashScreen');
-  const splashIcon = document.getElementById('splashIcon');
-  let dismissed = false;
-  let touchStartY = 0;
+  splash.style.display = 'none';
 
-  function dismissSplash() {
-    if (dismissed) return;
-    dismissed = true;
-    setAppHeight();
-    splashIcon.classList.add('splash-pulse');
-    setTimeout(() => {
-      splash.classList.add('splash-hide');
-      setTimeout(() => splash.remove(), 400);
-    }, 320);
+  // Pocket di test se non ce ne sono
+  if (!localStorage.getItem('fx_pockets')) {
+    localStorage.setItem('fx_pockets', JSON.stringify([
+      {id:'t1', name:'Affitto', emoji:'🏠', amount:700, color:'#7B2FFF', active:true},
+      {id:'t2', name:'Spesa', emoji:'🛒', amount:350, color:'#00D87C', active:true},
+      {id:'t3', name:'Trasporti', emoji:'🚗', amount:150, color:'#FF6B6B', active:true},
+      {id:'t4', name:'Ristoranti', emoji:'🍕', amount:200, color:'#FFA500', active:true},
+    ]));
   }
-
-  splash.addEventListener('touchstart', e => {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  splash.addEventListener('touchend', e => {
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (dy > 40) dismissSplash();
-  }, { passive: true });
 
 </script>
 </body>
