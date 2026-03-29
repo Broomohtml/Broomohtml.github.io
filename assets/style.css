@@ -319,6 +319,8 @@ body {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: none;
   padding-bottom: 90px;
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 90px), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 90px), transparent 100%);
 }
 
 /* ──────────────────────────────────────────
@@ -335,6 +337,8 @@ body {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: none;
   padding-bottom: 90px;
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 90px), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 90px), transparent 100%);
 }
 
 .home-list-header {
