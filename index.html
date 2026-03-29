@@ -25,7 +25,7 @@
   </div>
   <span class="splash-name">Finance</span>
   <span class="splash-hint">Tocca per aprire</span>
-  <span class="splash-version">v4.2.6</span>
+  <span class="splash-version">v4.2.7</span>
 </div>
 
 <!-- Gradient background -->
@@ -139,16 +139,12 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
-  // Forza scroll a 0 e ricalcola altezza (fix iOS PWA gap al lancio)
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-  });
-  // Retry setAppHeight dopo chiusura tastiera iOS
+  // Fix tastiera iOS: aggiorna altezza dopo chiusura tastiera
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
-      setTimeout(() => window.scrollTo(0, 0), 300);
+      setTimeout(() => {
+        document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+      }, 300);
     });
   }
 
@@ -161,6 +157,8 @@
   function dismissSplash() {
     if (dismissed) return;
     dismissed = true;
+    // Al tap iOS ha già assestato il viewport — innerHeight è corretto
+    document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
     splashIcon.classList.add('splash-pulse');
     setTimeout(() => {
       splash.classList.add('splash-hide');
